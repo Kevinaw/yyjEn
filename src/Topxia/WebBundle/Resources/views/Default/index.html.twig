@@ -1,0 +1,92 @@
+{% extends 'TopxiaWebBundle:Default:layout.html.twig' %}
+
+{% block content %}
+
+<div class="es-row-wrap container-gap">
+
+  {% if blocks.home_top_banner %}
+    <div class="homepage-feature homepage-feature-slides mbl">
+      <div class="cycle-pager"></div>
+      {{ blocks.home_top_banner|raw }}
+    </div>
+  {% endif %}
+  
+
+    
+  <div class="row row-9-3">
+
+    <div class="col-md-9">
+      <div class="es-box">
+        <div class="es-box-heading"><h2>课程</h2></div>
+        <div class="es-box-body">
+          {% if courses %}
+            {{ render(controller('TopxiaWebBundle:Course:coursesBlock', {courses:courses, view: 'grid'})) }}
+            {% if courses|length >= 12 %}
+              <a class="btn btn-default btn-lg btn-block" href="{{ path('course_explore') }}">更多课程</a>
+            {% endif %}
+          {% else %}
+            <div class="empty">还没有发布的课程</div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <!-- 为什么选择易雅就英语 start -->
+		<div class="es-box">
+			<div class="es-box-heading"><h2>为什么选择易雅就英语</h2></div>
+				<ul class="color-555">
+				<li>
+					<dl>
+						<dt>教师</dt>
+						<dd>我们选择的教师...</dd>
+					</dl>
+				</li>
+				<li>
+					<dl>
+						<dt>课程</dt>
+						<dd>我们的课程体系...</dd>
+					</dl>
+				</li>
+				<li>
+					<dl>
+						<dt>平台</dt>
+						<dd>我们的教学平台...</dd>
+					</dl>
+				</li>	
+				</ul>			
+		</div>
+		<!-- 为什么选择易雅就英语 end -->
+      {{ render(controller('TopxiaWebBundle:Default:latestReviewsBlock',{number:5})) }}
+      
+      
+      <div class="es-box">
+			<div class="es-box-heading"><h2>在线客服</h2></div>
+			<div class="center-block">
+      			<a href="#"> <img src="{{ asset('assets/img/qq.png') }}"></a>
+      		</div>
+	  </div>
+		
+		
+
+    </div>
+
+  </div>
+
+  <div class="row"><div class="col-md-12"></div></div>
+
+  <!-- 友情链接 start -->
+  	<div class="row">
+		<div class="es-box">
+			<div class="es-box-heading"><h2>友情链接</h2></div>
+        	<div class="es-box-body">
+				<div class="links">
+  					<a href="www.baidu.com"><img src="http://home.baidu.com/resource/r/home/img/logo-yy.gif"/></a>
+  					<a href="www.google.com"><img src="https://www.google.com/images/logos/google_logo_41.png"/></a>
+  				</div>
+        	</div>
+      	</div>
+	</div>
+  <!-- 友情链接 end -->
+</div>
+{% endblock %}

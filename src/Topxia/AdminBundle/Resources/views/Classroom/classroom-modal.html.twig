@@ -1,0 +1,49 @@
+{% extends 'TopxiaWebBundle::bootstrap-modal-layout.html.twig' %}
+{% set classroom = classroom|default(null) %}
+
+{% block title %}
+{% if classroom.id %}编辑{% else %}新增{% endif %}标签
+{% endblock %}
+{% block body %}
+  <form class="form-horizontal" id="classroom-form" action="{% if classroom.id %}{{ path('admin_classroom_update', {id:classroom.id}) }}{% else %}{{ path('admin_classroom_create') }}{% endif %}" method="post">
+    <div class="form-group">
+      <label class="col-md-3 control-label" for="classroom-name-field">教室名称</label>
+      <div class="col-md-6 controls">
+        <input class="form-control" id="classroom-name-field" type="text" name="name" value="{{ classroom.name }}" data-url="{{ path('admin_classroom_checkname', {exclude:classroom.name}) }}">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="col-md-3 control-label" for="classroom-serverAddress-field">服务器地址</label>
+      <div class="col-md-6 controls">
+        <input class="form-control" id="classroom-serverAddress-field" type="text" name="serverAddress" value="{{ classroom.serverAddress }}">
+      </div>
+    </div>
+    
+    <div class="form-group">
+      <label class="col-md-3 control-label" for="classroom-username-field">用户名</label>
+      <div class="col-md-6 controls">
+        <input class="form-control" id="classroom-username-field" type="text" name="username" value="{{ classroom.username }}">
+      </div>
+    </div>
+    
+    <div class="form-group">
+      <label class="col-md-3 control-label" for="classroom-password-field">密码</label>
+      <div class="col-md-6 controls">
+        <input class="form-control" id="classroom-password-field" type="text" name="password" value="{{ classroom.password }}" >
+      </div>
+    </div>
+        
+    <input type="hidden" name="_csrf_token" value="{{ csrf_token('site') }}">
+  </form>
+  <script type="text/javascript">app.load('classroom/save-modal')</script>
+{% endblock %}
+
+{% block footer %}
+  {% if classroom.id %}
+    <button class="btn btn-default pull-left delete-classroom" data-url="{{ path('admin_classroom_delete', {id:classroom.id}) }}" data-target="{{ classroom.id }}" data-classroom-id="{{ classroom.id }}"><i class="glyphicon glyphicon-trash"></i> 删除</button>
+  {% endif %}
+
+  <button type="button" class="btn btn-link" data-dismiss="modal">取消</button>
+  <button type="submit" class="btn btn-primary" data-toggle="form-submit" data-target="#classroom-form">保存</button>
+{% endblock %}

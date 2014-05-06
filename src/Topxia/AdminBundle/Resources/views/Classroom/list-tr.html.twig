@@ -1,0 +1,10 @@
+<tr id="classroom-tr-{{ classroom.id }}">
+  <td>{{ classroom.id }}</td>
+  <td>{{ classroom.name }}</td>
+  <td>{{ classroom.serverAddress }}</td>
+  <td>{{ classroom.username }}</td>
+  <td>{{ classroom.createTime|date('Y-m-d H:i') }}</td>
+  <td>
+    <button class="btn btn-default btn-sm" data-url="{{ path('admin_classroom_update', {id:classroom.id}) }}" data-toggle="modal" data-target="#modal">编辑</button>
+  </td>
+</tr>

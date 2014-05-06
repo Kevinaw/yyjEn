@@ -1,0 +1,38 @@
+{% extends 'TopxiaWebBundle:My:layout.html.twig' %}
+
+{% block title %}Freetime Registration - {{ parent() }}{% endblock %}
+
+{% set side_nav = 'my_freetimes' %}
+
+{% set script_controller = 'my/freetimes' %}
+
+{% block main %}
+<div class="panel panel-default panel-col">
+  <div class="panel-heading">
+    Freetime Registration
+  </div>
+  
+  <div class="panel-body">
+	<div class="well">
+		<h4>Date</h4>
+		<ul class="nav nav-pills"  id="course-date-ul">
+		{% for i in 1..7 %}
+			<li class="course-date" data-value="{{ nthDay[i] }}" data-url="{{ path('my_teaching_freetimes_list') }}"><a href="javascript:void(0)">{{ courseDate[nthDay[i]] }}</a></li>
+		{% endfor %}
+		</ul>
+  	</div>
+  	
+	<div class="well">
+		<h4>Time</h4>
+		<ul class="nav nav-pills" id="course-time-ul">
+		</ul>
+  	</div>
+  	<button id="button-confirm" type="button" class="btn btn-primary btn-lg disabled" data-url="{{ path('my_teaching_freetimes_confirm') }}">Update</button>
+  	{#
+  	<button id="button-cancel" type="button" class="btn btn-danger btn-lg hide" data-url="{{ path('my_teaching_freetimes_cancel') }}">Cancel</button>
+  	#}
+  	
+  </div>
+</div>
+
+{% endblock %}

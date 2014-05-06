@@ -1,0 +1,14 @@
+{% if booked %}
+	{% for courseTime in para %}
+		<li class="disabled"><a>{{ courseTime.timeTS|time }}(已预约)</a></li>
+	{% endfor %}
+{% else %}
+	{% for courseTime in para %}
+		{% if courseTime.AV == "1" %}
+			<li class="course-time" data-value="{{ courseTime.TS }}"><a href="javascript:void(0)">{{ courseTime.TS|time }}</a></li>
+		{% else %}
+			<li class="disabled" data-value="{{ courseTime.TS }}"><a>{{ courseTime.TS|time }}(已约满)</a></li>
+		{% endif %}
+	{% endfor %}
+{% endif %}
+

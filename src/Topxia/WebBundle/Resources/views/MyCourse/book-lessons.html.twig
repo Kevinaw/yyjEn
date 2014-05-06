@@ -1,0 +1,54 @@
+{% extends 'TopxiaWebBundle:My:layout.html.twig' %}
+
+{% block title %}预约课程 - {{ parent() }}{% endblock %}
+
+{% set side_nav = 'order_courses' %}
+
+{% set script_controller = 'my/book-lessons' %}
+
+{% block main %}
+
+<div class="panel panel-default panel-col">
+  <div class="panel-heading">预约课程</div>
+
+  <div class="panel-body">
+ 
+	{% if courses %}	  
+	<div class="well">
+		<h4> 课程类型 </h4>
+		<ul class="nav nav-pills" id="course-type-ul">
+		{% for course in courses %}
+		  <li class="course-type" data-courseid="{{ course.id }}"><a href="javascript:void(0)">{{ course.title }}</a></li>
+		{% endfor %}  
+		</ul>
+  	</div>
+
+	<div class="well">
+		<h4>上课日期</h4>
+		<ul class="nav nav-pills" id="course-date-ul">
+		  {% for i in 1..7 %}
+		  <li class="course-date" data-value="{{ nthDay[i] }}" data-url="{{ path('my_courses_booked_times') }}"><a href="javascript:void(0)">{{ courseDate[nthDay[i]] }}</a></li>
+		  {% endfor %}
+		</ul>
+  	</div>
+  	{# render(controller('TopxiaWebBundle:Course:coursesBlock', {courses:courses, view: 'grid', mode:'learn'})) #}
+  	{# render(controller('TopxiaWebBundle:MyCourse:bookedTimes', {})) #} 
+	<div class="well">
+		<h4>上课时间</h4>
+		<ul class="nav nav-pills" id="course-time-ul">
+
+		</ul>
+  	</div>
+  	<button id="button-confirm" type="button" class="btn btn-primary btn-lg hide" data-url="{{ path('my_courses_confirm_booking') }}">立即预约</button>
+  	<button id="button-cancel" type="button" class="btn btn-danger btn-lg hide" data-url="{{ path('my_courses_cancel_booking') }}">取消预约</button>
+
+	{% else %}
+		<div class="empty">暂无学习中的课程</div>
+	{% endif %} 	
+</div>
+
+
+{% endblock %}
+
+
+

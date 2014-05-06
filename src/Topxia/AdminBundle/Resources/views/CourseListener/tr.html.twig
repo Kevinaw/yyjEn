@@ -1,0 +1,25 @@
+{% import "TopxiaAdminBundle::macro.html.twig" as admin_macro %}
+<tr id="course-tr-{{ course.id }}">
+  <td>{{ lockedListener.id }}</td>
+  <td>
+    <a href="{{ path('course_manage', {id:course.id}) }}" target="_blank"><strong>{{ course.title }}</strong></a>
+  </td>
+  <td>
+    {{ admin_macro.user_link(user) }}
+  </td>
+  <td>
+    <div class="btn-group">
+      <a class="btn btn-default btn-sm">管理</a>
+
+      <a href="#" type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
+        <span class="caret"></span>
+      </a>
+      <ul class="dropdown-menu pull-right">
+        <li><a class="" href="{{ path('admin_course_listener_approve', {id:lockedListener.id, userId:user.id}) }}"><span class=""></span>通过审核</a></li>
+        <li><a class="" href="{{ path('admin_course_listener_deny', {id:lockedListener.id, userId:user.id}) }}"><span class=""></span>拒绝试听</a></li>
+		<li class="divider"></li>
+        <li><a class="" href="{{ path('admin_course_listener_delete', {id:lockedListener.id}) }}"><span class="glyphicon glyphicon-trash"></span>删除申请</a></li>
+      </ul>
+    </div>
+  </td>
+</tr>

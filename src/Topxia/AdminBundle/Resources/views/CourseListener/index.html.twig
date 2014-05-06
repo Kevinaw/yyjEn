@@ -1,0 +1,34 @@
+{% extends 'TopxiaAdminBundle:Course:layout.html.twig' %}
+
+{% block title %}课程管理 - {{ parent() }}{% endblock %}
+
+{% set script_controller = 'courselistener/index' %}
+
+{% set menu = 'course-listener' %}
+
+{% block main %}
+  <div class="page-header">
+    <h1>试听管理</h1>
+  </div>
+
+  <table class="table table-striped table-hover" id="course-table">
+    <thead>
+    <tr>
+      <th>编号</th>
+      <th width="40%">课程名称</th>
+      <th>试听学员</th>
+      <th>操作</th>
+    </tr>
+    </thead>
+    <tbody>
+      {% for lockedListener in lockedListeners %}
+        {% set user = users[lockedListener.userId]|default(null) %}
+        {% set course = courses[lockedListener.courseId]|default(null) %}
+        {% include 'TopxiaAdminBundle:CourseListener:tr.html.twig' %}
+      {% else %}
+        <tr><td colspan="20"><div class="empty">暂无试听申请记录</div></td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+{% endblock %}

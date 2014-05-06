@@ -1,0 +1,38 @@
+{% extends 'TopxiaAdminBundle:Course:layout.html.twig' %}
+
+{% block title %}教室管理 - {{ parent() }}{% endblock %}
+
+{% set menu = 'classroom' %}
+{% set script_controller = 'classroom/list' %}
+{% block main %}
+
+<div class="page-header clearfix">
+  <button class="btn btn-info btn-sm pull-right" id="add-classroom-btn" data-toggle="modal" data-target="#modal" data-url="{{ path('admin_classroom_create') }}">新增教室</button>    
+  <h1 class="pull-left">教室管理</h1>
+</div>
+
+<table id="classroom-table" class="table table-striped">
+    <thead>
+        <th width="10%">ID</th>
+        <th width="50%">名称</th>
+        <th width="10%">服务器地址</th>
+        <th width="10%">用户名</th>
+        <th width="10%">添加时间</th>
+        <th width="10%">操作</th>
+    </thead>
+    <tbody>
+      {% if classrooms %}
+        {% for classroom in classrooms %}
+          {% include 'TopxiaAdminBundle:Classroom:list-tr.html.twig' %}
+        {% endfor %}
+      {% else %}
+       <tr><td colspan="20"><div class="empty">暂无教室记录</div></td></tr>
+      {% endif %}
+
+    </tbody>
+</table>
+{# --
+{% if paginator.lastPage > 1 %} {{ pg.paginator(paginator) }} {% endif %}
+#}
+
+{% endblock %}
