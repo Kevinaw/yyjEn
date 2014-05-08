@@ -281,7 +281,23 @@ admin_course:
 admin_course_arrange:
     pattern:  /course/arrange
     defaults: { _controller: TopxiaAdminBundle:Course:arrange }
+
+admin_course_getTimes:
+    pattern:  /course/getTimes
+    defaults: { _controller: TopxiaAdminBundle:Course:getTimes }
     
+admin_course_getScheduleInfo:
+    pattern:  /course/getScheduleInfo
+    defaults: { _controller: TopxiaAdminBundle:Course:getScheduleInfo }
+
+admin_course_schedule_add:
+    pattern:  /course/addSchedule
+    defaults: { _controller: TopxiaAdminBundle:Course:addSchedule }
+
+admin_course_schedule_delete:
+    pattern:  /course/deleteSchedule
+    defaults: { _controller: TopxiaAdminBundle:Course:deleteSchedule}
+
 admin_course_delete:
     pattern:  /course/{id}/delete
     defaults: { _controller: TopxiaAdminBundle:Course:delete }

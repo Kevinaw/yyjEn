@@ -1,0 +1,36 @@
+{% set ind = 1 %}
+{% for tat in tats %}
+<tr>
+    <td><span>{{ ind++ }}</span></td>
+    <td><span class="text-primary">{{ teachers[tat.teacherId]['nickname'] }}</span></td>
+{% if schedules[tat.id] is defined %}
+{% set teacherId=tat.teacherId %}
+{% set studentId=sbls[schedules[tat.id]['studentbookId']]['studentId'] %}
+{% set courseId=sbls[schedules[tat.id]['studentbookId']]['courseId'] %}
+{% set classroomId=schedules[tat.id]['classroomId'] %}
+    <td><span class="text-success">{{ students[studentId]['nickname'] }}-{{ courses[courseId]['title'] }}</span></td>
+    <td><span class="text-success">{{ classrooms[classroomId] }}</span></td>
+	<td><button type="button" class="btn btn-primary disabled">提交</button>&nbsp;&nbsp;<button type="button" class="btn btn-danger">取消</button></td>
+{% else %}
+    <td>
+	    <select class="form-control">
+	        <option alue="0" selected >请安排课程</option>
+            {% for bookingOption in bookingOptions %}
+            <option value="{{ bookingOption.bookingId }}">{{ bookingOption.nickname }}-{{ bookingOption.course }}</option>
+            {% endfor %}
+		</select>
+    </td>
+    <td>
+		<select class="form-control">
+		    <option alue="0" selected >请安排教室</option>
+			{% for freeClassroom in freeClassrooms %}
+            <option value="{{ freeClassroom.id }}">{{ freeClassroom.name }}</option>
+            {% endfor %}
+		</select>
+{% endif %}
+</tr>
+{% endfor %}
+
+{% if tats == null %}
+    <tr> 咱无可排课老师 </tr>
+{% endif %}

@@ -31,8 +31,6 @@
 		  {% endfor %}
 		</ul>
   	</div>
-  	{# render(controller('TopxiaWebBundle:Course:coursesBlock', {courses:courses, view: 'grid', mode:'learn'})) #}
-  	{# render(controller('TopxiaWebBundle:MyCourse:bookedTimes', {})) #} 
 	<div class="well">
 		<h4>上课时间</h4>
 		<ul class="nav nav-pills" id="course-time-ul">
@@ -41,6 +39,24 @@
   	</div>
   	<button id="button-confirm" type="button" class="btn btn-primary btn-lg hide" data-url="{{ path('my_courses_confirm_booking') }}">立即预约</button>
   	<button id="button-cancel" type="button" class="btn btn-danger btn-lg hide" data-url="{{ path('my_courses_cancel_booking') }}">取消预约</button>
+
+	<div class="well">
+		<h4>My appointments</h4>
+        <table class="table table-striped table-hover" id="bookings-tbl">
+            <thead>
+            <tr>
+              <th>编号</th>
+              <th style="width:20%">学员姓名</th>
+              <th style="width:20%">预约课程</th>
+              <th style="width:20%">教师安排</th>
+              <th style="width:20%">教室安排</th>
+            </tr>
+            </thead>
+            <tbody>
+		<ul class="nav nav-pills" id="course-time-ul">
+
+		</ul>
+  	</div>
 
 	{% else %}
 		<div class="empty">暂无学习中的课程</div>

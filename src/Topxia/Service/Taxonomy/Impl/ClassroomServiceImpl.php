@@ -7,6 +7,12 @@ use Topxia\Common\ArrayToolkit;
 
 class ClassroomServiceImpl extends BaseService implements ClassroomService
 {
+	public function findClassroomsByIds(array $ids)
+	{
+		$classrooms = $this->getClassroomDao()->findClassroomsByIds($ids);
+        return ArrayToolkit::index($classrooms, 'id');
+	}
+    
     public function getClassroom($id)
     {
         if (empty($id)) {

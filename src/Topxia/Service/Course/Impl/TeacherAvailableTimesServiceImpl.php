@@ -3,6 +3,7 @@ namespace Topxia\Service\Course\Impl;
 
 use Topxia\Service\Common\BaseService;
 use Topxia\Service\Course\TeacherAvailableTimesService;
+use Topxia\Common\ArrayToolkit;
 
 class TeacherAvailableTimesServiceImpl extends BaseService implements TeacherAvailableTimesService
 {
@@ -74,6 +75,49 @@ class TeacherAvailableTimesServiceImpl extends BaseService implements TeacherAva
 		return $returnVal;	
 	}
 	
+	public function searchTATs($conditions, $sort = '', $start, $limit)
+	{
+		$orderBy = array('teacherId', 'ASC');
+		
+		return $this->getTeacherAvailableTimesDao()->searchTAT($conditions, $orderBy, $start, $limit);
+	}
+
+	public function searchSchedules($conditions, $sort = '', $start, $limit)
+	{
+		$orderBy = array('id', 'ASC');
+		
+		return $this->getCourseScheduleDao()->searchCourseSchedules($conditions, $orderBy, $start, $limit);
+	}
+    
+    public function addSchedule($data)
+    {
+        $retRes = array("status"=>"fail", "errorMsg"=>"");
+        if(false == ArrayToolkit::requireds($data, array("studentbookId", "teacheravaliableId", "classroomId", "lessonTS"))){
+           $retRes["errorMsg"] = "Add schedule failed! lack of parameters!";
+           return $retRes;
+        }
+        if(false == ArrayToolkit::withValues($data, array("studentbookId", "teacheravaliableId", "classroomId", "lessonTS"))){
+           $retRes["errorMsg"] = "Add schedule failed! one or more parameters have no value!";
+           return $retRes;
+        }
+        
+        $data['createTime'] = time();
+        $this->getCourseScheduleDao()->addCourseSchedule($data);
+        $this->getTeacherAvailableTimesDao()->updateTAT($data['teacheravaliableId'], array('haveCourse'=>1));
+
+        $retRes['status'] = "success";
+
+        return $retRes;
+    }
+
+    public function deleteSchedule($id)
+    {
+        $this->getCourseScheduleDao()->deleteCourseSchedule($id);
+        $this->getTeacherAvailableTimesDao()->updateTAT($id, array('haveCourse'=>0));
+
+        return true;
+    }
+
 	private function getTeacherAvailableTimesDao ()
 	{
 		return $this->createDao('Course.TeacherAvailableTimesDao');

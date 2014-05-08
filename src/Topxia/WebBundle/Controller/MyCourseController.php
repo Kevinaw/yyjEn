@@ -44,14 +44,8 @@ class MyCourseController extends BaseController
     	$nthDay = 	$this->getIndexesofTS();
     	// 获取所有上课日期的时间戳
     	$courseDate = $this->getCourseDateTS();
-    	
+
     	$currentUser = $this->getCurrentUser();
-    
-//     	$paginator = new Paginator(
-//     			$this->get('request'),
-//     			$this->getCourseService()->findUserLeaningCourseCount($currentUser['id']),
-//     			12
-//     	);
     	$courses = $this->getCourseService()->findUserLeaningCourses(
     			$currentUser['id'],
     			0,

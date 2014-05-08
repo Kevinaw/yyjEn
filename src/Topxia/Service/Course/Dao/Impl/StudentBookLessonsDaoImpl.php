@@ -51,6 +51,30 @@ class StudentBookLessonsDaoImpl extends BaseDao implements StudentBookLessonsDao
 		return $this->getConnection()->executeUpdate($sql, array($userId, $courseId, $dateTS));
 	}
 	
+	public function searchSBLs($conditions, $orderBy, $start, $limit)
+	{
+		//$this->filterStartLimit($start, $limit);
+		$builder = $this->_createSearchQueryBuilder($conditions)
+		->select('*')
+		->orderBy($orderBy[0], $orderBy[1])
+		->setFirstResult($start)
+		->setMaxResults($limit);
+
+		return $builder->execute()->fetchAll() ? : array();
+	}
+
+	private function _createSearchQueryBuilder($conditions)
+	{	
+		$builder = $this->createDynamicQueryBuilder($conditions)
+		->from(self::TABLENAME, 'sbl')
+		->andWhere('dateTS = :dateTS')
+		->andWhere('timeTS = :timeTS')
+		->andWhere('courseId = :courseId')
+		->andWhere('studentId = :studentId');
+	
+		return $builder;
+	}
+
     private function getTablename()
     {
         return self::TABLENAME;

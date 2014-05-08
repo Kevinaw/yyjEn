@@ -39,6 +39,17 @@ class ArrayToolkit
 		return true;
 	}
 
+    // check every key has a nonzero value
+	public static function withValues(array $array, array $keys)
+	{
+		foreach ($keys as $key) {
+			if (!isset($array[$key]) or 0 == $array[$key]) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 	public static function changes(array $before, array $after)
 	{
 		$changes = array('before' => array(), 'after' => array());

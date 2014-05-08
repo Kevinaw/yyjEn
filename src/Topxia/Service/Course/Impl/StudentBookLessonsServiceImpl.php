@@ -60,6 +60,14 @@ class StudentBookLessonsServiceImpl extends BaseService implements StudentBookLe
 		}
 		return true;
 	}		
+
+	public function searchSBLs($conditions, $sort = '', $start, $limit)
+	{
+		$orderBy = array('studentId', 'ASC');
+		
+		return $this->getStudentBookLessonsDao()->searchSBLs($conditions, $orderBy, $start, $limit);
+	}
+
 	private function getStudentBookLessonsDao ()
 	{
 		return $this->createDao('Course.StudentBookLessonsDao');

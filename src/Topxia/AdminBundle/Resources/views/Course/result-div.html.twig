@@ -1,0 +1,100 @@
+<h4>查询结果</h4>
+<div class="bg-info">预约总数：<strong><span class="text-warning" id="total-num">{{ bookingCount }}</span></strong>人</div>
+<div class="bg-info">空位总数：<strong><span class="text-warning" id="availabe-num">{{ availCount }}</span></strong>人</div>
+
+<h4>预约学员</h4>
+<table class="table table-striped table-hover" id="student-tbl">
+    <thead>
+    <tr>
+      <th>编号</th>
+      <th style="width:20%">学员姓名</th>
+      <th style="width:20%">预约课程</th>
+      <th style="width:20%">教师安排</th>
+      <th style="width:20%">教室安排</th>
+    </tr>
+    </thead>
+    <tbody>
+{% set ind = 1 %}
+{% for sbl in sbls %}
+    <tr>
+        <td><span>{{ ind }}</span></td>
+        <td><span class="text-primary">{{ students[sbl.studentId]['nickname'] }}</span></td>
+        <td><span>{{ courses[sbl.courseId]['title'] }}</span></td>
+    {% if schedules1[sbl.id] is defined %}
+    {% set teacheravaliableId=schedules1[sbl.id]['teacheravaliableId'] %}
+    {% set teacherId=tats[teacheravaliableId]['teacherId'] %}
+    {% set classroomId=schedules1[sbl.id]['classroomId'] %}
+        <td><span class="text-success">{{ teachers[teacherId]['nickname'] }}</span></td>
+        <td><span class="text-success">{{ classrooms[classroomId]['name'] }}</span></td>
+    {% else %}
+        <td><span class="text-warning">未安排</span></td>
+        <td><span class="text-warning">未安排</span></td>
+    {% endif %}
+    </tr>
+    {% set ind=ind+1 %}
+{% endfor %}
+{% if sbls == null %}
+    <tr><td> 咱无学生预约 </td></tr>
+{% endif %}
+    </tbody>
+</table>
+
+
+
+<h4>可上课教师</h4>
+<table class="table table-striped table-hover" id="teacher-tbl">
+    <thead>
+    <tr>
+      <th>编号</th>
+      <th style="width:20%">教师姓名</th>
+      <th style="width:20%">安排课程</th>
+      <th style="width:20%">安排教室</th>
+      <th style="width:20%">操作</th>
+    </tr>
+    </thead>
+    <tbody>
+{% set ind = 1 %}
+{% for tat in tats %}
+<tr>
+    <td><span>{{ ind }}</span></td>
+    <td><span class="text-primary">{{ teachers[tat.teacherId]['nickname'] }}</span></td>
+{% if schedules2[tat.id] is defined %}
+{% set teacherId=tat.teacherId %}
+{% set studentId=sbls[schedules2[tat.id]['studentbookId']]['studentId'] %}
+{% set courseId=sbls[schedules2[tat.id]['studentbookId']]['courseId'] %}
+{% set classroomId=schedules2[tat.id]['classroomId'] %}
+    <td><span class="text-success">{{ students[studentId]['nickname'] }}-{{ courses[courseId]['title'] }}</span></td>
+    <td><span class="text-success">{{ classrooms[classroomId]['name'] }}</span></td>
+	<td>
+        <button type="button" class="btn btn-primary disabled">提交</button>&nbsp;&nbsp;
+        <button type="button" class="cancel-button btn btn-danger" data-id="{{ schedules2[tat.id]['id'] }}" data-url="{{ path('admin_course_schedule_delete') }}" >取消</button></td>
+{% else %}
+    <td>
+	    <select class="form-control" id="booking-slt-{{ tat.id }}">
+	        <option value="" selected >请安排课程</option>
+            {% for bookingOption in bookingOptions %}
+            <option value="{{ bookingOption.bookingId }}">{{ bookingOption.nickname }}-{{ bookingOption.course }}</option>
+            {% endfor %}
+		</select>
+    </td>
+    <td>
+		<select class="form-control" id="classroom-slt-{{ tat.id }}">
+		    <option value="" selected >请安排教室</option>
+			{% for freeClassroom in freeClassrooms %}
+            <option value="{{ freeClassroom.id }}">{{ freeClassroom.name }}</option>
+            {% endfor %}
+		</select>
+    </td>
+	<td>
+        <button type="button" class="submit-button btn btn-primary" data-id="{{ tat.id }}" data-url="{{ path('admin_course_schedule_add') }}" >提交</button>&nbsp;&nbsp;
+        <button type="button" class="btn btn-danger disabled">取消</button></td>
+{% endif %}
+</tr>
+    {% set ind=ind+1 %}
+{% endfor %}
+
+{% if tats == null %}
+    <tr><td> 咱无可排课老师 </td></tr>
+{% endif %}
+    </tbody>
+</table>
