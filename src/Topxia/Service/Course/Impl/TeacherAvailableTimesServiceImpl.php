@@ -104,6 +104,7 @@ class TeacherAvailableTimesServiceImpl extends BaseService implements TeacherAva
         $data['createTime'] = time();
         $this->getCourseScheduleDao()->addCourseSchedule($data);
         $this->getTeacherAvailableTimesDao()->updateTAT($data['teacheravaliableId'], array('haveCourse'=>1));
+        $this->getStudentBookLessonsDao()->updateSBL($data['studentbookId'], array('isArranged'=>1));
 
         $retRes['status'] = "success";
 
@@ -114,6 +115,7 @@ class TeacherAvailableTimesServiceImpl extends BaseService implements TeacherAva
     {
         $this->getCourseScheduleDao()->deleteCourseSchedule($id);
         $this->getTeacherAvailableTimesDao()->updateTAT($id, array('haveCourse'=>0));
+        $this->getStudentBookLessonsDao()->updateSBL($data['studentbookId'], array('isArranged'=>0));
 
         return true;
     }
@@ -121,6 +123,11 @@ class TeacherAvailableTimesServiceImpl extends BaseService implements TeacherAva
 	private function getTeacherAvailableTimesDao ()
 	{
 		return $this->createDao('Course.TeacherAvailableTimesDao');
+	}
+
+	private function getStudentBookLessonsDao()
+	{
+		return $this->createDao('Course.StudentBookLessonsDao');
 	}
 
 	private function getCourseScheduleDao ()

@@ -50,9 +50,6 @@ class MyTeachingController extends BaseController
         	
         	$data = $request->request->all();
         	$courseDate = $data['courseDate'];
-
-//          $courseId = 12;
-//         	$courseDate = 139939200;
 			
         	// return value array("timestamp" => "status", ...), status: "have course", "registered", "availabe"
         	$tsVal = $this->getTeacherAvailableTimesService()->getFreetimesList($currentUser['id'], $courseDate);	
@@ -62,7 +59,6 @@ class MyTeachingController extends BaseController
             ));
             
             return $this->createJsonResponse(array('html' => $html));
-//              return $html;
         }
     }
     

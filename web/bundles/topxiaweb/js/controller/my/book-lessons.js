@@ -55,6 +55,11 @@ define(function(require, exports, module) {
         	
         	//预约时间提交按钮
         	$("#button-confirm").click(function(){
+                
+                if(!confirm("确定要更新你的预约吗？")){
+                    return false;
+                }
+
         		//课程及时间
         		var courseId = $("[class='course-type active']").data("courseid");
         		var courseDate = $("[class='course-date active']").data("value");
@@ -65,48 +70,40 @@ define(function(require, exports, module) {
         				courseTS.push(val);
         			}
         		}
-        		if(courseTS.length == 0){
-        			alert("上课时间未选择，请预约上课时间！");
-        			return false;
-        		}
 
         		courseTS = JSON.stringify(courseTS);
         		$.post($(this).data('url'), { courseId: courseId, courseDate: courseDate, courseTS: courseTS }, function(response) {
         			if(response.status == 'fail'){
         				alert(response.errorMsg);
         			} else{
-//        				alert("预约成功！");
-        				Notify.success('预约成功!');
+        				Notify.success('更新预约成功!');
         				$("#course-time-ul").html(response.html);
-        				
-        				$("#button-confirm").addClass("hide");
-        				$("#button-cancel").removeClass("hide");
         			}
         		}, 'json');
         	});
         	
           	//取消预约按钮
-        	$("#button-cancel").click(function(){
-        		
-	        	if (!confirm('真的要取消预约吗？')) {
-	    			return false;
-	    		}
-	        	
-        		//课程及时间
-        		var courseId = $("[class='course-type active']").data("courseid");
-        		var courseDate = $("[class='course-date active']").data("value");
-
-        		$.post($(this).data('url'), { courseId: courseId, courseDate: courseDate}, function(response) {
-        			if(response.status == 'success'){
-        				$("#course-time-ul").html(response.html);
-        				
-//        				alert("取消预约成功！");
-        				Notify.success('取消预约成功!');
-        				$("#button-confirm").removeClass("hide");
-        				$("#button-cancel").addClass("hide"); 
-        			} 
-        		}, 'json');
-        	});
+//        	$("#button-cancel").click(function(){
+//        		
+//	        	if (!confirm('真的要取消预约吗？')) {
+//	    			return false;
+//	    		}
+//	        	
+//        		//课程及时间
+//        		var courseId = $("[class='course-type active']").data("courseid");
+//        		var courseDate = $("[class='course-date active']").data("value");
+//
+//        		$.post($(this).data('url'), { courseId: courseId, courseDate: courseDate}, function(response) {
+//        			if(response.status == 'success'){
+//        				$("#course-time-ul").html(response.html);
+//        				
+////        				alert("取消预约成功！");
+//        				Notify.success('取消预约成功!');
+//        				$("#button-confirm").removeClass("hide");
+//        				$("#button-cancel").addClass("hide"); 
+//        			} 
+//        		}, 'json');
+//        	});
 //
 //        	$("#orders-table").on('click', '.cancel-refund', function(){
 //        		if (!confirm('真的要取消退款吗？')) {

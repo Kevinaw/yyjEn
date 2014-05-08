@@ -47,10 +47,25 @@ class StudentBookLessonsDaoImpl extends BaseDao implements StudentBookLessonsDao
 	
 	public function removeBookingsByCourseAndDate($userId, $courseId, $dateTS)
 	{
-		$sql = "DELETE FROM {$this->getTablename()} WHERE studentId = ? AND courseId = ? AND dateTS = ?";
-		return $this->getConnection()->executeUpdate($sql, array($userId, $courseId, $dateTS));
+        // 已排课的不能删除
+		$sql = "DELETE FROM {$this->getTablename()} WHERE studentId = ? AND courseId = ? AND dateTS = ? AND isArranged = ?";
+		return $this->getConnection()->executeUpdate($sql, array($userId, $courseId, $dateTS, 0));
 	}
 	
+	public function searchSBLCount($conditions)
+	{
+		$builder = $this->_createSearchQueryBuilder($conditions)
+		->select('COUNT(id)');
+
+		return $builder->execute()->fetchColumn(0);
+	}
+
+	public function updateSBL($id, $fields)
+	{
+		$this->getConnection()->update(self::TABLENAME, $fields, array('id' => $id));
+		return $this->getBooking($id);
+	}
+
 	public function searchSBLs($conditions, $orderBy, $start, $limit)
 	{
 		//$this->filterStartLimit($start, $limit);
@@ -70,7 +85,8 @@ class StudentBookLessonsDaoImpl extends BaseDao implements StudentBookLessonsDao
 		->andWhere('dateTS = :dateTS')
 		->andWhere('timeTS = :timeTS')
 		->andWhere('courseId = :courseId')
-		->andWhere('studentId = :studentId');
+		->andWhere('studentId = :studentId')
+		->andWhere('isArranged = :isArranged');
 	
 		return $builder;
 	}

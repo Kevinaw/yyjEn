@@ -26,15 +26,15 @@ class StudentBookLessonsServiceImpl extends BaseService implements StudentBookLe
 	//
 	public function addBookings($userId, $courseId, $dateTS, $timeTSs)
 	{
-		$returnVal = array("status"=>"fail", "error"=>"");
+		$returnVal = array("status"=>"success", "error"=>"");
 		
-		if(empty($timeTSs)){
-			$returnVal["error"] = "上课时间未选择，预约课程失败";
-			
-		}else {			
+        $this->removeBookingsByCourseAndDate($userId, $courseId, $dateTS);
+
+		if(!empty($timeTSs)){
 			$member = $this->getMemberDao()->findMembersByUserIdAndCourseIdAndRoleAndIsLearned($userId, $courseId, 'student', '0');
 			if($member['remainingNum'] < count($timeTSs)){
 				$returnVal["error"] = "您只有" . $this->getAvailableBookingsCount() . "次课可预约，请重新选择！";
+				$returnVal["status"] = "fail";
 				return $returnVal;
 			}
 			
@@ -48,6 +48,47 @@ class StudentBookLessonsServiceImpl extends BaseService implements StudentBookLe
 		return $returnVal;
 	}
 	
+	// return value array(array("timestamp", "tag"),...), tag("arranged", "booked", "free", "NA")
+	public function getTSandStatus($studentId, $courseDate)
+	{
+		$tsList = $this->getCourseTimesTS($courseDate);
+		
+		foreach($tsList as $key => $freetime){
+			//已排课
+			$sblCount = $this->getStudentBookLessonsDao()->searchSBLCount(array(
+						"dateTS" => $courseDate,
+						"timeTS" => $freetime['timestamp'],
+						"studentId" => $studentId,
+						"isArranged" => '1'));
+
+			if(0 != $sblCount){//已排课
+				$freetime['tag'] = "arranged";
+			}else{
+				$sblCount = $this->getStudentBookLessonsDao()->searchSBLCount(array(
+						"dateTS" => $courseDate,
+						"timeTS" => $freetime['timestamp'],
+						"studentId" => $studentId,
+						"isArranged" => 0));
+				if(!empty($sblCount)){//已预约
+					$freetime['tag'] = "booked";
+				}else {
+        			$studentCount = $this->getBookingCounts($freetime["timestamp"]);
+        			$teacherCount = $this->getTeacherAvailableTimesDao()->getTeacherCounts($freetime["timestamp"]);
+        			
+        			if($studentCount < $teacherCount) { //可预约
+                        $freetime['tag'] = "free";
+                    } else{//已约满
+                        $freetime['tag'] = "NA";
+                    }
+                }
+			}
+			
+			$tsList[$key] = $freetime;
+		}
+		
+		return $tsList;		
+	}
+
 	//
 	public function removeBookingsByCourseAndDate($userId, $courseId, $dateTS)
 	{
@@ -77,4 +118,33 @@ class StudentBookLessonsServiceImpl extends BaseService implements StudentBookLe
 	{
 		return $this->createDao('Course.CourseMemberDao');
 	}
+
+    protected function getTeacherAvailableTimesDao()
+    {
+    	return $this->createDao('Course.TeacherAvailableTimesDao');
+    }
+
+	//获取上课时间的时间戳,根据上课日期的时间戳
+	private function getCourseTimesTS($courseDateTs)
+	{
+		$dayKey = $courseDateTs;
+
+		$timeArray = array(
+				array( "timestamp" => mktime(7, 00, 00, date("m", $dayKey), date("d", $dayKey), date("Y", $dayKey)), "tag" => "0"),
+				array( "timestamp" => mktime(7, 30, 00, date("m", $dayKey), date("d", $dayKey), date("Y", $dayKey)), "tag" => "0"),
+				array( "timestamp" => mktime(8, 00, 00, date("m", $dayKey), date("d", $dayKey), date("Y", $dayKey)), "tag" => "0"),
+				array( "timestamp" => mktime(8, 30, 00, date("m", $dayKey), date("d", $dayKey), date("Y", $dayKey)), "tag" => "0"),
+				array( "timestamp" => mktime(19, 00, 00, date("m", $dayKey), date("d", $dayKey), date("Y", $dayKey)), "tag" => "0"),
+				array( "timestamp" => mktime(19, 30, 00, date("m", $dayKey), date("d", $dayKey), date("Y", $dayKey)), "tag" => "0"),
+				array( "timestamp" => mktime(20, 00, 00, date("m", $dayKey), date("d", $dayKey), date("Y", $dayKey)), "tag" => "0"),
+				array( "timestamp" => mktime(20, 30, 00, date("m", $dayKey), date("d", $dayKey), date("Y", $dayKey)), "tag" => "0"),
+				array( "timestamp" => mktime(21, 00, 00, date("m", $dayKey), date("d", $dayKey), date("Y", $dayKey)), "tag" => "0"),
+				array( "timestamp" => mktime(21, 30, 00, date("m", $dayKey), date("d", $dayKey), date("Y", $dayKey)), "tag" => "0"),
+				array( "timestamp" => mktime(22, 00, 00, date("m", $dayKey), date("d", $dayKey), date("Y", $dayKey)), "tag" => "0"),
+				array( "timestamp" => mktime(22, 30, 00, date("m", $dayKey), date("d", $dayKey), date("Y", $dayKey)), "tag" => "0")
+		);
+	
+		return $timeArray;
+	}
+
 }

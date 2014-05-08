@@ -138,6 +138,12 @@
 	background-color: #d9edf7;
 	border-radius: 4px;
 	display: block;
+    margin-left: 2px;
+}
+
+#course-time-ul li{
+    width: 125px;
+    text-align:center;
 }
 /*! define gallery2/video-js/4.2.1/video-js-debug.css */
 /*!

@@ -1,3 +1,4 @@
+{#
 {% if booked %}
 	{% for courseTime in para %}
 		<li class="disabled"><a>{{ courseTime.timeTS|time }}(已预约)</a></li>
@@ -11,4 +12,16 @@
 		{% endif %}
 	{% endfor %}
 {% endif %}
+#}
 
+{% for courseTime in para %}
+	{% if courseTime.tag == "arranged" %}
+		<li class="disabled bg-pri"><a><span class="text-danger">{{ courseTime.timestamp|time }}(已排课)</span></a></li>
+	{% elseif courseTime.tag == "booked" %}
+		<li class="course-time active" data-value="{{ courseTime.timestamp }}"><a href="javascript:void(0)">{{ courseTime.timestamp|time }}(已预约)</a></li>
+	{% elseif courseTime.tag == "free" %}
+		<li class="course-time" data-value="{{ courseTime.timestamp }}"><a href="javascript:void(0)">{{ courseTime.timestamp|time }}</a></li>
+	{% else %}
+		<li class="disabled" data-value="{{ courseTime.timestamp }}"><a href="javascript:void(0)">{{ courseTime.timestamp|time }}(已约满)</a></li>
+	{% endif %}	
+{% endfor %}

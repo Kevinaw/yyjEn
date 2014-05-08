@@ -59,6 +59,18 @@ class MyCourseController extends BaseController
     	));
     }
 
+    private function getTSandStatus($userId, $dateTS)
+    {
+        // return value array("timestamp" => "status", ...), status: "arranged", "booked", "free", "NA"
+        $tsList = $this->getStudentBookLessonsService()->getTSandStatus($userId, $dateTS);	
+
+        $html = $this->renderView('TopxiaWebBundle:MyCourse:course-time-li.html.twig', array(
+             'para'=>$tsList
+        ));
+
+        return $html;
+    }
+
     //每次点击日期，执行本函数。
     //若已预约，返回我的预约情况；若未预约，返回时间列表供选择。
     public function bookedTimesAction(Request $request)
@@ -70,42 +82,10 @@ class MyCourseController extends BaseController
         	$courseId = $data['courseId'];
         	$courseDate = $data['courseDate'];
 
-//          	$courseId = 12;
-//         	$courseDate = 1399737600;
-        	
-        	$booked = $this->getStudentBookLessonsService()->isBooked($currentUser['id'], $courseId, $courseDate);
-        	
-        	//给模板传递的参数
-        	$para = array();
+        	// return value array("timestamp" => "status", ...), status: "arranged", "booked", "free", "NA"
+        	$html = $this->getTSandStatus($currentUser['id'], $courseDate);	
 
-        	if($booked)//已预约
-        	{
-        		$para = $this->getStudentBookLessonsService()->findByUserCourseDate($currentUser['id'], $courseId, $courseDate);
-        	}
-        	else //未预约
-        	{
-        		$courseTimes = $this->getCourseTimesTS($courseDate);
-        		foreach($courseTimes as $key => $courseTime)
-        		{
-        			//根据TS判断预约数
-        			$studentCount = $this->getStudentBookLessonsService()->getBookingCounts($courseTime["TS"]);
-        			$teacherCount = $this->getTeacherAvailableTimesService()->getTeacherCounts($courseTime["TS"]);
-        			
-        			if($studentCount < $teacherCount)
-        			{
-        				$courseTimes[$key]["AV"] = "1";
-        			}
-        		}
-        		
-        		$para = $courseTimes;        		
-        	}
-        	
-            $html = $this->renderView('TopxiaWebBundle:MyCourse:course-time-li.html.twig', array(
-                 'booked' => $booked, 'para'=>$para
-            ));
-            
-            return $this->createJsonResponse(array('booked' => $booked, 'html' => $html));
-//              return $html;
+            return $this->createJsonResponse(array('booked' => '', 'html' => $html));
         }
     }
     
@@ -121,19 +101,9 @@ class MyCourseController extends BaseController
         	$courseTS = json_decode($data['courseTS']);
         	
         	$result = $this->getStudentBookLessonsService()->addBookings($currentUser['id'], $courseId, $courseDate, $courseTS);
+
+            $html = $this->getTSandStatus($currentUser['id'], $courseDate);
 			
-        	// 添加成功
-        	$html = "";
-        	if($result['status'] == 'success'){
-        		$para = array();
-        		foreach($courseTS as $timeTS)
-        			array_push($para, array("timeTS" => $timeTS));
-        		
-        		$html = $this->renderView('TopxiaWebBundle:MyCourse:course-time-li.html.twig', array(
-        				'booked' => true, 'para'=>$para
-        			));
-        	}
-        	
         	return $this->createJsonResponse(array('status' => $result['status'], 'errorMsg' => $result['error'], 'html' => $html));
         }
     }
