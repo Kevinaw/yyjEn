@@ -13,6 +13,12 @@ class CourseScheduleDaoImpl extends BaseDao implements CourseScheduleDao
         $sql = "SELECT * FROM {$this->getTablename()} WHERE id = ? LIMIT 1";
         return $this->getConnection()->fetchAssoc($sql, array($id)) ? : null;
     }
+
+    public function getCourseScheduleByBookingId($id)
+    {
+        $sql = "SELECT * FROM {$this->getTablename()} WHERE studentbookId = ? LIMIT 1";
+        return $this->getConnection()->fetchAssoc($sql, array($id)) ? : null;
+    }
     
     public function findCourseSchedulesByIds(array $ids)
     {

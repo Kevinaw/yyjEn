@@ -85,6 +85,9 @@ class TeacherAvailableTimesServiceImpl extends BaseService implements TeacherAva
 	public function searchSchedules($conditions, $sort = '', $start, $limit)
 	{
 		$orderBy = array('id', 'ASC');
+        if($sort != '' and $sort != null){
+            $orderBy = $sort;
+        }
 		
 		return $this->getCourseScheduleDao()->searchCourseSchedules($conditions, $orderBy, $start, $limit);
 	}
@@ -113,9 +116,10 @@ class TeacherAvailableTimesServiceImpl extends BaseService implements TeacherAva
 
     public function deleteSchedule($id)
     {
+        $schedule = $this->getCourseScheduleDao()->getCourseSchedule($id);
         $this->getCourseScheduleDao()->deleteCourseSchedule($id);
-        $this->getTeacherAvailableTimesDao()->updateTAT($id, array('haveCourse'=>0));
-        $this->getStudentBookLessonsDao()->updateSBL($data['studentbookId'], array('isArranged'=>0));
+        $this->getTeacherAvailableTimesDao()->updateTAT($schedule['teacheravaliableId'], array('haveCourse'=>0));
+        $this->getStudentBookLessonsDao()->updateSBL($schedule['studentbookId'], array('isArranged'=>0));
 
         return true;
     }

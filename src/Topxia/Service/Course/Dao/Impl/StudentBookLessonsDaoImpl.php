@@ -47,11 +47,18 @@ class StudentBookLessonsDaoImpl extends BaseDao implements StudentBookLessonsDao
 	
 	public function removeBookingsByCourseAndDate($userId, $courseId, $dateTS)
 	{
-        // 已排课的不能删除
-		$sql = "DELETE FROM {$this->getTablename()} WHERE studentId = ? AND courseId = ? AND dateTS = ? AND isArranged = ?";
-		return $this->getConnection()->executeUpdate($sql, array($userId, $courseId, $dateTS, 0));
+        // 删除预约同时删除排课
+		$sql = "DELETE student_booked_lessons, course_schedule FROM student_booked_lessons left join course_schedule on student_booked_lessons.id = course_schedule.studentbookId WHERE student_booked_lessons.studentId = ? AND student_booked_lessons.courseId = ? AND student_booked_lessons.dateTS = ?";
+		return $this->getConnection()->executeUpdate($sql, array($userId, $courseId, $dateTS));
 	}
 	
+	public function removeBooking($id)
+	{
+        // 删除预约同时删除排课
+		$sql = "DELETE student_booked_lessons, course_schedule FROM student_booked_lessons left join course_schedule on student_booked_lessons.id = course_schedule.studentbookId WHERE student_booked_lessons.id= ?";
+		return $this->getConnection()->executeUpdate($sql, array($id));
+	}
+
 	public function searchSBLCount($conditions)
 	{
 		$builder = $this->_createSearchQueryBuilder($conditions)
@@ -76,6 +83,12 @@ class StudentBookLessonsDaoImpl extends BaseDao implements StudentBookLessonsDao
 		->setMaxResults($limit);
 
 		return $builder->execute()->fetchAll() ? : array();
+	}
+
+	public function searchArrangedSBLs($courseId, $studentId)
+	{
+		$sql = "SELECT * FROM student_booked_lessons LEFT JOIN course_schedule ON student_booked_lessons.id = course_schedule.studentbookId WHERE student_booked_lessons.courseId =  ? AND student_booked_lessons.studentId = ? AND student_booked_lessons.isArranged = 1 ORDER BY student_booked_lessons.timeTS DESC LIMIT 30 OFFSET 0";
+		return $this->getConnection()->fetchAll($sql, array($courseId, $studentId)) ? : null;
 	}
 
 	private function _createSearchQueryBuilder($conditions)

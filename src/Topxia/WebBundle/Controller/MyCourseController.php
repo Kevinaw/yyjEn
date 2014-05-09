@@ -32,9 +32,24 @@ class MyCourseController extends BaseController
             $paginator->getPerPageCount()
         );
 
+        // array('id'=>array('dateTS'=>'', 'timeTS'=>'', ),....)
+        $courseBookings = array();
+        // 查找所有正在学习课程的选课历史，并返回。
+        if(!empty($courses))
+        {
+            foreach($courses as $course)
+            {
+                // 先取出最近30次已排课的预约的id
+                $bookings = $this->getStudentBookLessonsService()->searchArrangedSBLs($course['id'], $currentUser['id']);
+
+                $courseBookings[$course['id']] = $bookings;
+            }
+        }
+
         return $this->render('TopxiaWebBundle:MyCourse:learning.html.twig', array(
             'courses'=>$courses,
-            'paginator' => $paginator
+            'paginator' => $paginator,
+            'courseBookings' => $courseBookings
         ));
     }
 
@@ -59,13 +74,13 @@ class MyCourseController extends BaseController
     	));
     }
 
-    private function getTSandStatus($userId, $dateTS)
+    private function getTSandStatus($userId, $dateTS, $courseId )
     {
         // return value array("timestamp" => "status", ...), status: "arranged", "booked", "free", "NA"
-        $tsList = $this->getStudentBookLessonsService()->getTSandStatus($userId, $dateTS);	
+        $tsList = $this->getStudentBookLessonsService()->getTSandStatus($userId, $dateTS, $courseId);	
 
         $html = $this->renderView('TopxiaWebBundle:MyCourse:course-time-li.html.twig', array(
-             'para'=>$tsList
+             'para'=>$tsList 
         ));
 
         return $html;
@@ -82,10 +97,13 @@ class MyCourseController extends BaseController
         	$courseId = $data['courseId'];
         	$courseDate = $data['courseDate'];
 
-        	// return value array("timestamp" => "status", ...), status: "arranged", "booked", "free", "NA"
-        	$html = $this->getTSandStatus($currentUser['id'], $courseDate);	
+            //剩余课时数
+            $remainingNum = $this->getStudentBookLessonsService()->findRemainingNum($currentUser['id'], $courseId); 
 
-            return $this->createJsonResponse(array('booked' => '', 'html' => $html));
+        	// return value array("timestamp" => "status", ...), status: "arranged", "booked", "free", "NA"
+        	$html = $this->getTSandStatus($currentUser['id'], $courseDate, $courseId);	
+
+            return $this->createJsonResponse(array('booked' => '', 'html' => $html, 'remainingNum' => $remainingNum));
         }
     }
     
@@ -102,9 +120,12 @@ class MyCourseController extends BaseController
         	
         	$result = $this->getStudentBookLessonsService()->addBookings($currentUser['id'], $courseId, $courseDate, $courseTS);
 
-            $html = $this->getTSandStatus($currentUser['id'], $courseDate);
+            //剩余课时数
+            $remainingNum = $this->getStudentBookLessonsService()->findRemainingNum($currentUser['id'], $courseId); 
+
+            $html = $this->getTSandStatus($currentUser['id'], $courseDate, $courseId);
 			
-        	return $this->createJsonResponse(array('status' => $result['status'], 'errorMsg' => $result['error'], 'html' => $html));
+        	return $this->createJsonResponse(array('status' => $result['status'], 'errorMsg' => $result['error'], 'html' => $html, 'remainingNum'=>$remainingNum));
         }
     }
     

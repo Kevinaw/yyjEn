@@ -34,6 +34,7 @@ define(function(require, exports, module) {
         		
         		$.post($(this).data('url'), { courseId: courseId, courseDate: courseDate }, function(response) {
         			$("#course-time-ul").html(response.html);
+                    $("#remaining-num").html("余" + response.remainingNum);
         			if(response.booked == true){
         				$("#button-confirm").addClass("hide");
         				$("#button-cancel").removeClass("hide");
@@ -78,6 +79,7 @@ define(function(require, exports, module) {
         			} else{
         				Notify.success('更新预约成功!');
         				$("#course-time-ul").html(response.html);
+                        $("#remaining-num").html("余" + response.remainingNum);
         			}
         		}, 'json');
         	});

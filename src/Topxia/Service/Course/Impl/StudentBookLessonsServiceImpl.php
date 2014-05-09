@@ -28,12 +28,41 @@ class StudentBookLessonsServiceImpl extends BaseService implements StudentBookLe
 	{
 		$returnVal = array("status"=>"success", "error"=>"");
 		
-        $this->removeBookingsByCourseAndDate($userId, $courseId, $dateTS);
+        // 取出这一天的预定时间，如果已经预约的时间，且在这次提交的时间列表内，则不更新；只对其他时间进行删除和添加操作。
+        $sbls = $this->searchSBLs(array(
+                'studentId'=>$userId,
+                'courseId'=>$courseId,
+                'dateTS'=>$dateTS), null, 0, 10000);
+        foreach($sbls as $sbl)
+        {
+            // 在本次提交的时间列表里，则从列表中删除,之后对他不做任何操作
+            if( false !== ($key = array_search($sbl['timeTS'], $timeTSs)))
+            {
+                unset($timeTSs[$key]);
+            }
+            // 不在本次提交的时间列表里，则删除
+            else
+            {
+                //如果已经排课，则删除排课，同时更新老师的排课标签
+                $schedule = $this->getCourseScheduleDao()->searchCourseSchedules(array(
+                                    'studentbookId'=>$sbl['id'],
+                                    'lessonTS'=>$sbl['timeTS']), array('id', 'ASC'), 0, 10);
+                // 删除预定的同时删除排课
+                $this->getStudentBookLessonsDao()->removeBooking($sbl['id']);
+               
+                if (! empty($schedule))
+                    $this->getTeacherAvailableTimesDao()->updateTAT($schedule[0]['teacheravaliableId'], array('haveCourse'=>0));
+
+			    $member = $this->getMemberDao()->findMembersByUserIdAndCourseIdAndRoleAndIsLearned($userId, $courseId, 'student', '0');
+			    $member['remainingNum'] = $member['remainingNum'] + 1;
+			    $this->getMemberDao()->updateMember($member['id'], $member);
+            }
+        }
 
 		if(!empty($timeTSs)){
 			$member = $this->getMemberDao()->findMembersByUserIdAndCourseIdAndRoleAndIsLearned($userId, $courseId, 'student', '0');
 			if($member['remainingNum'] < count($timeTSs)){
-				$returnVal["error"] = "您只有" . $this->getAvailableBookingsCount() . "次课可预约，请重新选择！";
+				$returnVal["error"] = "您只有" . $member['remainingNum'] . "次课可预约，请重新选择！";
 				$returnVal["status"] = "fail";
 				return $returnVal;
 			}
@@ -47,41 +76,55 @@ class StudentBookLessonsServiceImpl extends BaseService implements StudentBookLe
 		}
 		return $returnVal;
 	}
+
+    public function findRemainingNum($userId, $courseId)
+    {
+	    $member = $this->getMemberDao()->findMembersByUserIdAndCourseIdAndRoleAndIsLearned($userId, $courseId, 'student', '0');
+        if(!empty($member))
+	        return $member['remainingNum'];
+        else
+            return 0;
+    }
 	
 	// return value array(array("timestamp", "tag"),...), tag("arranged", "booked", "free", "NA")
-	public function getTSandStatus($studentId, $courseDate)
+	public function getTSandStatus($studentId, $courseDate, $courseId)
 	{
 		$tsList = $this->getCourseTimesTS($courseDate);
 		
 		foreach($tsList as $key => $freetime){
 			//已排课
-			$sblCount = $this->getStudentBookLessonsDao()->searchSBLCount(array(
+			if(0 != $this->getStudentBookLessonsDao()->searchSBLCount(array(
 						"dateTS" => $courseDate,
 						"timeTS" => $freetime['timestamp'],
 						"studentId" => $studentId,
-						"isArranged" => '1'));
-
-			if(0 != $sblCount){//已排课
+                        "courseId" => $courseId,
+						"isArranged" => '1'))){
 				$freetime['tag'] = "arranged";
-			}else{
-				$sblCount = $this->getStudentBookLessonsDao()->searchSBLCount(array(
+			}//已预约
+            elseif(0 != $this->getStudentBookLessonsDao()->searchSBLCount(array(
 						"dateTS" => $courseDate,
 						"timeTS" => $freetime['timestamp'],
 						"studentId" => $studentId,
-						"isArranged" => 0));
-				if(!empty($sblCount)){//已预约
-					$freetime['tag'] = "booked";
-				}else {
-        			$studentCount = $this->getBookingCounts($freetime["timestamp"]);
-        			$teacherCount = $this->getTeacherAvailableTimesDao()->getTeacherCounts($freetime["timestamp"]);
-        			
-        			if($studentCount < $teacherCount) { //可预约
-                        $freetime['tag'] = "free";
-                    } else{//已约满
-                        $freetime['tag'] = "NA";
-                    }
+						"courseId" => $courseId,
+						"isArranged" => '0'))){
+				$freetime['tag'] = "booked";
+			} //已被其他课选择
+            elseif(0 != $this->getStudentBookLessonsDao()->searchSBLCount(array(
+						"dateTS" => $courseDate,
+						"timeTS" => $freetime['timestamp'],
+						"studentId" => $studentId))){
+                $freetime['tag'] = "NA";
+            } //看看是否可预约
+            else{
+            	$studentCount = $this->getBookingCounts($freetime["timestamp"]);
+            	$teacherCount = $this->getTeacherAvailableTimesDao()->getTeacherCounts($freetime["timestamp"]);
+            	
+            	if($studentCount < $teacherCount) { //可预约
+                    $freetime['tag'] = "free";
+                } else{//已约满
+                    $freetime['tag'] = "NA";
                 }
-			}
+            }
 			
 			$tsList[$key] = $freetime;
 		}
@@ -105,9 +148,16 @@ class StudentBookLessonsServiceImpl extends BaseService implements StudentBookLe
 	public function searchSBLs($conditions, $sort = '', $start, $limit)
 	{
 		$orderBy = array('studentId', 'ASC');
+        if( $sort !== '' AND $sort !== null)
+		    $orderBy = $sort;
 		
 		return $this->getStudentBookLessonsDao()->searchSBLs($conditions, $orderBy, $start, $limit);
 	}
+
+	public function searchArrangedSBLs($courseId, $studentId)
+    {
+		return $this->getStudentBookLessonsDao()->searchArrangedSBLs($courseId, $studentId);
+    }
 
 	private function getStudentBookLessonsDao ()
 	{
@@ -123,6 +173,11 @@ class StudentBookLessonsServiceImpl extends BaseService implements StudentBookLe
     {
     	return $this->createDao('Course.TeacherAvailableTimesDao');
     }
+
+	private function getCourseScheduleDao ()
+	{
+		return $this->createDao('Course.CourseScheduleDao');
+	}
 
 	//获取上课时间的时间戳,根据上课日期的时间戳
 	private function getCourseTimesTS($courseDateTs)
