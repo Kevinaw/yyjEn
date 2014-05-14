@@ -4,7 +4,7 @@
     <li class="course-grid">
       <a href="{{ path('course_show', {id:course.id}) }}" class="grid-body">
         <img src="{{ file_path(course.largePicture, 'course-large.png') }}"  class="img-responsive thumb">
-        <span class="title">{{ course.title }} ({{ course.startingTime }}开课)</span>
+        <span class="title">{{ course.title }}</span>
         {% if mode in ['default', 'teach'] %}
           <span class="metas clearfix">
             <span class="price-col">
@@ -35,7 +35,7 @@
               {% endif %}
             </span>
           </span>
-          
+{#
         {% if mode in ['default'] %}
           {% set user = users[course.teacherIds|first]|default(null) %}
           {% if user %}
@@ -46,9 +46,9 @@
             </span>
           {% endif %}
         {% endif  %}
-        
+#}
 		  <div class="top-border">
-			<a href="{{ path('course_show', {id:course.id}) }}" class="btn-large-fat">加入学习</a>
+			<a href="{{ path('course_show', {id:course.id}) }}" class="btn-large-fat">购买课程</a>
 		  </div>          
         {% endif %}
 

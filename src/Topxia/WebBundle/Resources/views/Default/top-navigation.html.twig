@@ -1,4 +1,5 @@
 <ul class="nav navbar-nav">
+    <li><a href="{{ path('homepage') }}">首页</a></li>
 	{% for nav in navigations %}
 	  {% if nav.isOpen %}
 		  <li><a href="{{ nav.url|navigation_url }}" {% if nav.isNewWin %}target="_blank"{% endif %}>{{ nav.name }}</a></li>

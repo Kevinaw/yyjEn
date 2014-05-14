@@ -11,11 +11,9 @@
     </div>
   {% endif %}
   
-
-    
   <div class="row row-9-3">
-
-    <div class="col-md-9">
+    <!-- 课程开始 -->
+    <div class="col-xs-9">
       <div class="es-box">
         <div class="es-box-heading"><h2>课程</h2></div>
         <div class="es-box-body">
@@ -30,11 +28,12 @@
         </div>
       </div>
     </div>
-
-    <div class="col-md-3">
+    <!-- 课程结束 -->
+    
+    <div class="col-xs-3">
       <!-- 为什么选择易雅就英语 start -->
 		<div class="es-box">
-			<div class="es-box-heading"><h2>为什么选择易雅就英语</h2></div>
+			<div class="es-box-heading"><h2>为什么选择129en</h2></div>
 				<ul class="color-555">
 				<li>
 					<dl>
@@ -57,8 +56,8 @@
 				</ul>			
 		</div>
 		<!-- 为什么选择易雅就英语 end -->
+
       {{ render(controller('TopxiaWebBundle:Default:latestReviewsBlock',{number:5})) }}
-      
       
       <div class="es-box">
 			<div class="es-box-heading"><h2>在线客服</h2></div>
@@ -73,20 +72,7 @@
 
   </div>
 
-  <div class="row"><div class="col-md-12"></div></div>
+  <div class="row"><div class="col-xs-12"></div></div>
 
-  <!-- 友情链接 start -->
-  	<div class="row">
-		<div class="es-box">
-			<div class="es-box-heading"><h2>友情链接</h2></div>
-        	<div class="es-box-body">
-				<div class="links">
-  					<a href="www.baidu.com"><img src="http://home.baidu.com/resource/r/home/img/logo-yy.gif"/></a>
-  					<a href="www.google.com"><img src="https://www.google.com/images/logos/google_logo_41.png"/></a>
-  				</div>
-        	</div>
-      	</div>
-	</div>
-  <!-- 友情链接 end -->
 </div>
 {% endblock %}

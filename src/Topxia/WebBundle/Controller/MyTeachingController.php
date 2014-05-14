@@ -11,22 +11,47 @@ class MyTeachingController extends BaseController
     public function coursesAction(Request $request)
     {
         $user = $this->getCurrentUser();
+       // $paginator = new Paginator(
+       //     $this->get('request'),
+       //     $this->getCourseService()->findUserTeachCourseCount($user['id'], false),
+       //     12
+       // );
+       // 
+       // $courses = $this->getCourseService()->findUserTeachCourses(
+       //     $user['id'],
+       //     $paginator->getOffsetCount(),
+       //     $paginator->getPerPageCount(),
+       //     false
+       // );
+
         $paginator = new Paginator(
             $this->get('request'),
-            $this->getCourseService()->findUserTeachCourseCount($user['id'], false),
-            12
+            $this->getTeacherAvailableTimesService()->findArrangedTATCount($user['id']),
+            30
         );
-        
-        $courses = $this->getCourseService()->findUserTeachCourses(
+        // 查找所有已排课课程的历史，并返回。
+        // 先取出最近30次已排课课程
+        $TATs = $this->getTeacherAvailableTimesService()->findArrangedTATs(
             $user['id'],
             $paginator->getOffsetCount(),
-            $paginator->getPerPageCount(),
-            false
-        );
+            $paginator->getPerPageCount()
+       );
+        
+        $students = array();
+        $courses = array();
+        if(null !== $TATs)
+        {
+            $students = $this->getUserService()->findUsersByIds(ArrayToolkit::column($TATs, 'studentId'));
+            $students = ArrayToolkit::index($students, 'id');
+            $courses = $this->getCourseService()->findCoursesByIds(ArrayToolkit::column($TATs, 'courseId'));
+            $courses = ArrayToolkit::index($courses, 'id');
+        }
 
         return $this->render('TopxiaWebBundle:MyTeaching:teaching.html.twig', array(
-            'courses'=>$courses,
-            'paginator' => $paginator
+            'TATs'=>$TATs,
+            'paginator' => $paginator,
+            'students' => $students,
+            'courses' => $courses
         ));
     }
 

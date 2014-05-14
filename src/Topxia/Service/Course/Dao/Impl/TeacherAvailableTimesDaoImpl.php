@@ -62,6 +62,16 @@ class TeacherAvailableTimesDaoImpl extends BaseDao implements TeacherAvailableTi
 		return $builder->execute()->fetchColumn(0);
 	}
 	
+	public function searchJoinedTATs($userId, $start, $limit)
+	{
+		$sql = "SELECT * FROM teacher_available_times " . 
+                "LEFT JOIN course_schedule ON teacher_available_times.id = course_schedule.teacheravaliableId " .
+                "LEFT JOIN student_booked_lessons ON student_booked_lessons.id = course_schedule.studentbookId " . 
+                "WHERE teacher_available_times.teacherId = ? AND teacher_available_times.haveCourse = 1 " . 
+                "ORDER BY teacher_available_times.availableTimeTS DESC LIMIT 30 OFFSET 0";
+		return $this->getConnection()->fetchAll($sql, array($userId/*, $limit, $start*/)) ? : null;
+	}
+
 	public function addTAT($tat)
 	{
 		$affected = $this->getConnection()->insert(self::TABLENAME, $tat);

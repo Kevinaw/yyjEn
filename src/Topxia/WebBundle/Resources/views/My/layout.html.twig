@@ -13,19 +13,21 @@
 
           {% if app.user.isTeacher() %}
             <div class="list-group-panel">
-              <div class="list-group-heading">我的教学</div>
+              <div class="list-group-heading">My Teaching</div>
               <ul class="list-group">
                <a class="list-group-item
                {% if side_nav == 'my_freetimes' %} active {% endif %}" 
                href="{{path('my_teaching_freetimes')}}">Freetime Registration</a>
                <a class="list-group-item
                {% if side_nav == 'my-teaching-courses' %} active {% endif %}" 
-               href="{{path('my_teaching_courses')}}">在教课程</a>
+               href="{{path('my_teaching_courses')}}">My Teaching Courses</a>
+{#
                <a class="list-group-item 
                {% if side_nav == 'my-teaching-questions' %} active {% endif %}" 
                 href="{{path('my_teaching_threads', {type:'question'}) }}">学员问答</a>
                <a class="list-group-item {% if side_nav == 'my-teaching-discussions' %} active {% endif %}"
                 href="{{path('my_teaching_threads', {type:'discussion'}) }}">学员话题</a>
+#}
               </ul>
             </div>
           
@@ -40,20 +42,20 @@
 				<a class="list-group-item
                {% if side_nav == 'order_courses' %} active {% endif %}" 
                href="{{path('my_courses_book_lessons')}}">预约课程</a>
+{#
                <a class="list-group-item
                {% if side_nav == 'remaining_courses' %} active {% endif %}" 
                href="{{path('remaining_courses')}}">课程余额</a>           
                <a class="list-group-item
                {% if side_nav == 'my-questions' %} active {% endif %}" 
               href="{{path('my_questions')}}">我的问答</a>
-         {#     
                <a class="list-group-item
                {% if side_nav == 'my-discussions' %} active {% endif %}" 
               href="{{path('my_discussions')}}">我的话题</a>
                <a class="list-group-item
                {% if side_nav == 'my-notes' %} active {% endif %}" 
                 href="{{path('my_notebooks')}}">我的笔记</a>
-         #}
+#}
             </ul>
           </div>
           

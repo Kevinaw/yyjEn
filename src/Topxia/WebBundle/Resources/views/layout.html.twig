@@ -7,7 +7,6 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{% block title %} {{ setting('site.name', '129en') }} - {% if setting('site.slogan') %}{{ setting('site.slogan') }} -{% endif %} Powered by 129en{% endblock %}</title>
   <meta name="keywords" content="{% block keywords %}{% endblock %}" />
   <meta name="description" content="{% block description %}{% endblock %}" />
@@ -19,6 +18,7 @@
   {% block stylesheets %}
     <link href="{{ asset('assets/libs/gallery2/bootstrap/3.0.1/css/bootstrap.css') }}" rel="stylesheet" />
     <link rel="stylesheet" media="screen" href="{{ asset('assets/css/common.css') }}" />
+    <link rel="stylesheet" media="screen" href="{{ asset('assets/css/non-responsive.css') }}" />
     <link rel="stylesheet" media="screen" href="{{ asset('assets/css/bootstrap-extends.css') }}" />
     <link rel="stylesheet" media="screen" href="{{ asset('bundles/topxiaweb/css/web.css') }}" />
     <!--[if lt IE 8]>
@@ -45,95 +45,38 @@
 <div class="container">
 	<div class = "row margin-top-10 margin-bottom-10">
 		<!-- logo -->
-		<div class="col-md-5">
+		<div class="col-xs-9">
 	    	<a href="{{ path('homepage') }}"><img src="{{ asset('assets/img/logo.png') }}"></a>
 		</div>
-		<div class="col-md-4">
-			<a class=""><img src="{{ asset('assets/img/dianping.png') }}"></a>
-		</div>
-		<div class="col-md-3">
+		<div class="col-xs-3">
 			<a class=""><img src="{{ asset('assets/img/4001.png') }}"></a>
 		</div>
-{# 删除    		
-    		<div class = "row col-md-offset-1">
-  
-			    <!-- main nav start -->
-				<ul class="nav nav-pills nav-justified">
-				  <li><a href="{{ path('homepage') }}">首页</a></li>
-				  {{ render(controller('TopxiaWebBundle:Default:topNavigation')) }}
-				  <li></li>
-					{% if app.user %}
-		              <li class="dropdown hidden-lt-ie8">
-		                <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ app.user.nickname }} <b class="caret"></b></a>
-	    				
-						<ul class="dropdown-menu">
-		                  <li><a href="{{ path('my') }}"><i class="glyphicon glyphicon-book"></i> 我的课程 </a></li>
-		                  <li><a href="{{ path('settings') }}"><i class="glyphicon glyphicon-cog"></i> 帐号设置</a></li>
-		                  <li class="divider"></li>
-		                  {% if is_granted('ROLE_ADMIN') %}
-		                    <li><a href="{{ path('admin') }}"><i class="glyphicon glyphicon-dashboard"></i> 管理后台</a></li>
-		                    <li class="divider"></li>
-		                  {% endif %}
-		                  <li><a href="{{ path('logout') }}"><i class="glyphicon glyphicon-off"></i> 退出</a></li>
-		                </ul>
-		               </li>
-		            {% else %}
-		              <li><div>
-		              	<a href="{{ path('login') }}">登录</a>
-		              	<a>|</a>
-		              	<a href="{{ path('register') }}">注册</a>
-		              	</div>
-		              </li>
-		            {% endif %}	            
-				</ul>
-				<!-- main nav end -->
-			</div>
-#}			
 	</div> 
 </div>
 
-
-
-  <div class="navbar navbar-inverse site-navbar" id="site-navbar"  data-counter-url="{{ path('user_remind_counter') }}">
+  <div class="navbar navbar-default site-navbar" id="site-navbar"  data-counter-url="{{ path('user_remind_counter') }}">
     <div class="container">
       <div class="container-gap">
+{#
         <div class="navbar-header">
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="{{ path('homepage') }}">{{ setting('site.name', '129en') }}</a>
+          <a class="navbar-brand" href="{{ path('homepage') }}">首页</a>
         </div>
+#}
         <div class="navbar-collapse collapse">
           {{ render(controller('TopxiaWebBundle:Default:topNavigation')) }}
 
           <ul class="nav navbar-nav navbar-right">
-{# 删除
-            <li><a href="{{ path('search') }}"><span class="glyphicon glyphicon-search"></span> 搜索</a></li>
- #}
             {% if app.user %}
- {# 删除            
-              <li><a href="{{ path('notification') }}" class="badge-container notification-badge-container">
-                <span class="glyphicon glyphicon-bullhorn hidden-lt-ie8"></span>
-                <span class="visible-lt-ie8">通知</span>
-                {% if app.user.newNotificationNum > 0 %}<span class="badge">{{ app.user.newNotificationNum }}</span>{% endif %}</a></li>
-              <li>
-                <a href="{{ path('message') }}" class="badge-container message-badge-container">
-                <span class="glyphicon glyphicon-envelope hidden-lt-ie8"></span>
-                <span class="visible-lt-ie8">私信</span>
-                {% if app.user.newMessageNum > 0 %}<span class="badge">{{ app.user.newMessageNum }}</span>{% endif %}
-                </a>
-                </li>
-#}
               <li class="visible-lt-ie8"><a href="{{ path('settings') }}">{{ app.user.nickname }}</a></li>
               <li class="dropdown hidden-lt-ie8">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ app.user.nickname }} <b class="caret"></b></a>
                 <ul class="dropdown-menu">
                   <li><a href="{{ path('my') }}"><i class="glyphicon glyphicon-book"></i> 我的课程 </a></li>
-{# 删除
-                  <li><a href="{{ path('user_show', {id:app.user.id}) }}"><i class="glyphicon glyphicon-home"></i> 我的主页</a></li>
-#}
                   <li><a href="{{ path('settings') }}"><i class="glyphicon glyphicon-cog"></i> 帐号设置</a></li>
                   <li class="divider"></li>
                   {% if is_granted('ROLE_ADMIN') %}

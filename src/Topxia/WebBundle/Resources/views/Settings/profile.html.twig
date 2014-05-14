@@ -33,7 +33,7 @@
 
             </div>
           </div>
-
+{#
           <div class="help-block approval">
             <label class="col-md-2 control-label" ></label>
               {% if app.user.approvalStatus == 'approving' %}
@@ -56,12 +56,12 @@
                  </p>
               {% endif %}
           </div>
-
+#}
           <div class="form-group">
             <div class="col-md-2 control-label">{{ form_label(form.gender, '性别') }}</div>
             <div class="col-md-7 controls radios">{{ form_widget(form.gender) }}</div>
           </div>
-
+{#
           <div class="form-group">
             <div class="col-md-2 control-label">{{ form_label(form.company, '公司') }}</div>
             <div class="col-md-7 controls">{{ form_widget(form.company, {attr:{class:'form-control'}}) }}</div>
@@ -71,7 +71,7 @@
             <div class="col-md-2 control-label"> {{ form_label(form.job, '职业') }} </div>
             <div class="col-md-7 controls"> {{ form_widget(form.job, {attr:{class:'form-control'}}) }} </div>
           </div>
-
+#}
           <div class="form-group">
             <div class="col-md-2 control-label"> {{ form_label(form.title, '头衔') }} </div>
             <div class="col-md-7 controls"> {{ form_widget(form.title, {attr:{class:'form-control'}}) }} </div>
@@ -83,10 +83,10 @@
           </div>          
 
           <div class="form-group">
-            <div class="col-md-2 control-label"> {{ form_label(form.about, '自我介绍') }} </div>
+            <div class="col-md-2 control-label"> {{ form_label(form.about, '学习期望') }} </div>
             <div class="col-md-7 controls"> {{ form_widget(form.about, {attr:{class:'form-control'}}) }} </div>
           </div>
-
+{#
           <div class="form-group">
             <div class="col-md-2 control-label"> {{ form_label(form.site, '个人主页') }} </div>
             <div class="col-md-7 controls"> {{ form_widget(form.site, {attr:{class:'form-control'}}) }} </div>
@@ -96,7 +96,7 @@
             <div class="col-md-2 control-label"> {{ form_label(form.weibo, '微博') }} </div>
             <div class="col-md-7 controls"> {{ form_widget(form.weibo, {attr:{class:'form-control'}}) }} </div>
           </div>
-
+#}
           <div class="form-group">
             <div class="col-md-2 control-label"> {{ form_label(form.weixin, '微信') }} </div>
             <div class="col-md-7 controls"> {{ form_widget(form.weixin, {attr:{class:'form-control'}}) }} </div>
@@ -114,7 +114,9 @@
 
           <div class="row">
             <div class="col-md-7 col-md-offset-2">
+                <div class="hide">
               {{ form_rest(form) }}
+                </div>
               <button type="submit" class="btn btn-primary">保存</button>
             </div>
           </div>

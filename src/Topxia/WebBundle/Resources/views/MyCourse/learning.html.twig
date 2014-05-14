@@ -35,7 +35,7 @@
                         <th>#</th>
                         <th>日期</th>
                         <th>时间</th>
-                        <th></th>
+                        <th>教室</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -43,11 +43,11 @@
                 {% for booking in courseBookings[course.id] %}
                 {% set ind = ind + 1 %}
                     <tr>
-                        <th>{{ ind }}</th>
-                        <th>{{ booking.dateTS | date("m-d")}}</th>
-                        <th>{{ booking.timeTS | time }}</th>
+                        <td>{{ ind }}</td>
+                        <td>{{ booking.dateTS | date("m-d")}}</td>
+                        <td>{{ booking.timeTS | time }}</td>
     {# 进入教室的逻辑，上课前10分钟有效，不到上课时间显示其他同学正在使用教室，到达上课时间就能进入教室了，可以重复进入；课程结束后，关闭按钮；#}
-                        <th><button type="button" class="btn btn-primary">进入教室</button></th>
+                        <td><button type="button" class="btn btn-primary">进入教室</button></td>
                     </tr>
                 {% endfor %}
                 </tbody>

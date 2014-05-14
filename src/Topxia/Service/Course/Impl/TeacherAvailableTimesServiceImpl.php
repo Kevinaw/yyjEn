@@ -12,6 +12,20 @@ class TeacherAvailableTimesServiceImpl extends BaseService implements TeacherAva
 		return $this->getTeacherAvailableTimesDao()->getTeacherCounts($courseTime);
 	}
 	
+    // 查找老师已排课的课程数
+	public function findArrangedTATCount($userId)
+	{
+	    return $this->getTeacherAvailableTimesDao()->searchTATCount(array(
+						"teacherId" => $userId,
+						"haveCourse" => 1));
+	}
+
+    // 查找老师已排课的课程 同时返回课表和学生预约信息 JOIN
+	public function findArrangedTATs($userId, $start, $limit)
+	{
+	    return $this->getTeacherAvailableTimesDao()->searchJoinedTATs($userId, $start, $limit);
+	}
+
 	// return value array(array("timestamp", "tag"),...), tag("have course", "registered", "NA")
 	public function getFreetimesList($teacherId, $courseDate)
 	{

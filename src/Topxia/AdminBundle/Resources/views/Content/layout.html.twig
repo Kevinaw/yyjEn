@@ -14,12 +14,10 @@
 {# --    
     <a href="{{ path('admin_file') }}" class="list-group-item {% if menu == 'file' %}active{% endif %}" style="display:none;">文件监控</a>
     <a href="{{ path('admin_comment') }}" class="list-group-item {% if menu == 'comment' %}active{% endif %}" style="display:none;">评论管理</a>
- 	   
-#}
 	<a href="{{ url('admin_content', {type:'success'}) }}" class="list-group-item {% if menu == 'success' %}active{% endif %}">成功例子</a>
 	<a href="{{ url('admin_content', {type:'resource'}) }}" class="list-group-item {% if menu == 'resource' %}active{% endif %}">学习资源</a>
 	<a href="{{ url('admin_content', {type:'review'}) }}" class="list-group-item {% if menu == 'review' %}active{% endif %}">地道点评</a>
-
+#}
       </div>
     {% endblock %}
   </div>
