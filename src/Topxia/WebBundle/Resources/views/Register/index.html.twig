@@ -8,14 +8,14 @@
   <div class="col-md-6 col-md-offset-3 ptl">
     {% if isLoginEnabled %}
       <div class="panel panel-default panel-page">
-        <div class="panel-heading"><h2>注册</h2></div>
+        <div class="panel-heading"><h2>注册Register</h2></div>
 
         <form id="register-form" class="form-vertical" method="post" action="{{ path('register') }}">
 
           {{ web_macro.flash_messages() }}
 
           <div class="form-group">
-            {{ form_label(form.email, '邮箱地址', {label_attr:{class:'control-label'}}) }}
+            {{ form_label(form.email, '邮箱地址Email', {label_attr:{class:'control-label'}}) }}
             <div class="controls">
               {{ form_widget(form.email, {attr:{class:'form-control', 'data-url':path('register_email_check')}}) }}
               <p class="help-block">填写你常用的邮箱作为登录帐号</p>
@@ -23,7 +23,7 @@
           </div>
 
           <div class="form-group">
-            {{ form_label(form.nickname, '昵称', {label_attr:{class:'control-label'}}) }}
+            {{ form_label(form.nickname, '昵称Nickname', {label_attr:{class:'control-label'}}) }}
             <div class="controls">
               {{ form_widget(form.nickname, {attr:{class:'form-control', 'data-url':path ('register_nickname_check')}}) }}
               <p class="help-block">该怎么称呼你？ 中、英文均可，最长14个英文或7个汉字</p>
@@ -31,7 +31,7 @@
           </div>
 
           <div class="form-group">
-            {{ form_label(form.mobile, '手机号', {label_attr:{class:'control-label'}}) }}
+            {{ form_label(form.mobile, '手机号Cellphone', {label_attr:{class:'control-label'}}) }}
             <div class="controls">
               {{ form_widget(form.mobile, {attr:{class:'form-control'}}) }}
               <p class="help-block">填写手机号，方便短信通知</p>
@@ -39,7 +39,7 @@
           </div>
           
           <div class="form-group">
-            {{ form_label(form.password, '密码', {label_attr:{class:'control-label'}}) }}
+            {{ form_label(form.password, '密码Password', {label_attr:{class:'control-label'}}) }}
             <div class="controls">
               {{ form_widget(form.password, {attr:{class:'form-control'}}) }}
               <p class="help-block">5-20位英文、数字、符号，区分大小写</p>
@@ -47,7 +47,7 @@
           </div>
 
           <div class="form-group">
-            {{ form_label(form.confirmPassword, '确认密码', {label_attr:{class:'control-label'}}) }}
+            {{ form_label(form.confirmPassword, '确认密码Again', {label_attr:{class:'control-label'}}) }}
             <div class="controls">
               {{ form_widget(form.confirmPassword, {attr:{class:'form-control'}}) }}
               <p class="help-block">再输入一次密码</p>
@@ -57,7 +57,7 @@
           <div class="form-group">
             <div class="controls">
               {{ form_rest(form) }}
-              <button type="submit" class="btn btn-primary btn-large btn-block">注册</button>
+              <button type="submit" class="btn btn-primary btn-large btn-block">注册Register</button>
             </div>
           </div>
 

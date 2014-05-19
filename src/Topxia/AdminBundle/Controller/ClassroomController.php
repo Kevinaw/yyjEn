@@ -28,7 +28,7 @@ class ClassroomController extends BaseController
 		}
 
 		return $this->render('TopxiaAdminBundle:Classroom:classroom-modal.html.twig', array(
-			'classroom' => array('id' => 0, 'name' => '', 'serverAddress'=>'', 'username'=>'', 'password'=>'')
+			'classroom' => array('id' => 0, 'name' => '', 'serverAddress'=>'', 'meetingId'=>'', 'password'=>'')
 		));
 	}
 

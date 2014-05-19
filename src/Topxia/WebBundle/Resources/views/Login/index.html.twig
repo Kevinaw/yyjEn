@@ -8,7 +8,7 @@
   <div class="col-md-6 col-md-offset-3">
 
     <div class="panel panel-default panel-page">
-      <div class="panel-heading"><h2>登录</h2></div>
+      <div class="panel-heading"><h2>登录Login</h2></div>
 
       <form id="login-form" class="form-vertical" method="post" action="{{ path('login_check') }}">
 
@@ -17,14 +17,14 @@
         {% endif %}
 {{ web_macro.flash_messages() }}
         <div class="form-group">
-          <label class="control-label" for="login_username">帐号</label>
+          <label class="control-label" for="login_username">帐号Account</label>
           <div class="controls">
             <input class="form-control" id="login_username" type="text" name="_username" value="{{ last_username }}" required />
             <div class="help-block">请输入Email地址 / 手机号 / 用户昵称</div>
           </div>
         </div>
         <div class="form-group">
-          <label class="control-label" for="login_password">密码</label>
+          <label class="control-label" for="login_password">密码Password</label>
           <div class="controls">
             <input class="form-control" id="login_password" type="password" name="_password" required />
           </div>
@@ -38,7 +38,7 @@
             {% if app.request.query.get('to') %}
               <input type="hidden" name="_target_path" value="{{ app.request.query.get('to') }}" />
             {% endif %}
-            <button type="submit" class="btn btn-fat btn-primary btn-large">登录</button>
+            <button type="submit" class="btn btn-fat btn-primary btn-large">登录Login</button>
           </div>
         </div>
 

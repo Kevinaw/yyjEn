@@ -414,6 +414,10 @@ course_manage_student_remark:
     pattern:  /course/{courseId}/manage/student/{userId}/remark
     defaults: { _controller: TopxiaWebBundle:CourseStudentManage:remark }
 
+course_manage_student_remainingNum:
+    pattern:  /course/{courseId}/manage/student/{userId}/remainingnum
+    defaults: { _controller: TopxiaWebBundle:CourseStudentManage:remainingNum}
+
 course_manage_student_check_nickname:
     pattern:  /course/{id}/manage/nickname_check
     defaults: { _controller: TopxiaWebBundle:CourseStudentManage:checkNickname }
@@ -732,6 +736,10 @@ my_teaching_courses:
     pattern: /my/teaching/courses
     defaults: { _controller: TopxiaWebBundle:MyTeaching:courses }
 
+my_teaching_enter_classroom:
+    pattern: /my/teaching/enterClassroom/{bid}/{cid}/{cts}
+    defaults: { _controller: TopxiaWebBundle:MyTeaching:enterClassroom }
+
 my_teaching_freetimes:
     pattern: /my/teaching/freetimes
     defaults: { _controller: TopxiaWebBundle:MyTeaching:freetimes }
@@ -755,6 +763,10 @@ my_teaching_threads:
 my_courses_learning:
     pattern: /my/courses/learning
     defaults: { _controller: TopxiaWebBundle:MyCourse:learning }
+
+my_courses_enterClassroom:
+    pattern: /my/courses/enterClassroom/{bid}/{cid}/{cts}
+    defaults: { _controller: TopxiaWebBundle:MyCourse:enterClassroom }
 
 my_courses_book_lessons:
     pattern: /my/courses/booklessons

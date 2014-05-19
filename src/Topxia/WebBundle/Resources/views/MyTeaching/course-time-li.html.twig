@@ -1,9 +1,25 @@
 {% for courseTime in para %}
 	{% if courseTime.tag == "have course" %}
-		<li class="disabled bg-pri"><a><span class="text-danger">{{ courseTime.timestamp|time }}({{ courseTime.tag }})</span></a></li>
+		<li class="disabled bg-pri">
+            <a>
+                <span class="text-danger">{{ courseTime.timestamp|teacher_time }}
+                    <br>
+                    <small>{{ courseTime.tag }}</small>
+                </span>
+            </a>
+        </li>
 	{% elseif courseTime.tag == "available" %}
-		<li class="course-time active" data-value="{{ courseTime.timestamp }}"><a href="javascript:void(0)">{{ courseTime.timestamp|time }}({{ courseTime.tag }})</a></li>
+		<li class="course-time active" data-value="{{ courseTime.timestamp }}">
+            <a href="javascript:void(0)">{{ courseTime.timestamp|teacher_time }}
+                <br>
+                <small>{{ courseTime.tag }}</small>
+            </a>
+        </li>
 	{% else %}
-		<li class="course-time" data-value="{{ courseTime.timestamp }}"><a href="javascript:void(0)">{{ courseTime.timestamp|time }}</a></li>
+		<li class="course-time" data-value="{{ courseTime.timestamp }}">
+            <a href="javascript:void(0)">
+                {{ courseTime.timestamp|teacher_time }}
+            </a>
+        </li>
 	{% endif %}	
 {% endfor %}

@@ -124,6 +124,25 @@ class CourseStudentManageController extends BaseController
         ));
     }
 
+    public function remainingNumAction(Request $request, $courseId, $userId)
+    {
+        $course = $this->getCourseService()->tryManageCourse($courseId);
+        $user = $this->getUserService()->getUser($userId);
+        $member = $this->getCourseService()->getCourseMember($courseId, $userId);
+
+        if ('POST' == $request->getMethod()) {
+            $data = $request->request->all();
+            $member = $this->getCourseService()->remainNumStudent($course['id'], $user['id'], $data['remainingNum']);
+            return $this->createStudentTrResponse($course, $member);
+        }
+
+        return $this->render('TopxiaWebBundle:CourseStudentManage:remaining-modal.html.twig',array(
+            'member'=>$member,
+            'user'=>$user,
+            'course'=>$course
+        ));
+    }
+
     public function checkNicknameAction(Request $request, $id)
     {
         $nickname = $request->query->get('value');

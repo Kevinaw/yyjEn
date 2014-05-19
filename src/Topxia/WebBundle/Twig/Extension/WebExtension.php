@@ -29,6 +29,7 @@ class WebExtension extends \Twig_Extension
             'tags_join' => new \Twig_Filter_Method($this, 'tagsJoinFilter'),
             'navigation_url' => new \Twig_Filter_Method($this, 'navigationUrlFilter'),
         	'time' => new \Twig_Filter_Method($this, 'TS2TimeFilter'),
+        	'teacher_time' => new \Twig_Filter_Method($this, 'TS2TeacherTimeFilter'),
         );
     }
 
@@ -383,6 +384,13 @@ class WebExtension extends \Twig_Extension
     {
 		return date("H:i", $TS);
     }
+
+    public function TS2TeacherTimeFilter($TS)
+    {
+        $tz = date_default_timezone_get();
+        date_default_timezone_set("America/Toronto");
+		$teacherTime = date("m-d H:i", $TS);
+        date_default_timezone_set($tz);
+        return $teacherTime;
+    }
 }
-
-

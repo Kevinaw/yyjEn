@@ -2,6 +2,8 @@
 
 {% block title %}学习中 - {{ parent() }}{% endblock %}
 
+{% set script_controller = 'my/learning' %}
+
 {% set tab_nav = 'learning' %}
 
 {% block main %}
@@ -29,7 +31,7 @@
             {% set ind1 = ind1 + 1 %}
             <div class="tab-pane {% if 1 == ind1 %} active {% endif %}" id="course-{{ course.id }}">
             {% if courseBookings[course.id] %}
-            <table class="table">
+            <table class="table table-striped">
                 <thead>
                     <tr>
                         <th>#</th>
@@ -47,7 +49,7 @@
                         <td>{{ booking.dateTS | date("m-d")}}</td>
                         <td>{{ booking.timeTS | time }}</td>
     {# 进入教室的逻辑，上课前10分钟有效，不到上课时间显示其他同学正在使用教室，到达上课时间就能进入教室了，可以重复进入；课程结束后，关闭按钮；#}
-                        <td><button type="button" class="btn btn-primary">进入教室</button></td>
+                        <td><a href="{% if booking.crStatus == 'enabled' %} {{ path('my_courses_enter_classroom', {bid: booking.studentbookId, cid: booking.classroomId, cts: booking.timeTS}) }} {%endif%}" class="btn btn-primary btn-lg {% if booking.crStatus =='occupied' %} classroom-occupied {% endif %}" role="button" {% if booking.crStatus == 'disabled' %} disabled {% endif %} {% if booking.crStatus == 'enabled' %} target = "_blank"{% endif %}>进入教室</a></td>
                     </tr>
                 {% endfor %}
                 </tbody>

@@ -55,6 +55,15 @@ class MyTeachingController extends BaseController
         ));
     }
 
+    public function enterClassroomAction(Request $request, $bid, $cid, $cts)
+    {
+        $url = $this->getStudentBookLessonsService()->formClassroomUrl($bid, $cid, $cts);
+
+        return $this->render('TopxiaWebBundle:MyCourse:classroom.html.twig', array(
+            'url'=>$url
+        ));
+    }
+
     public function freetimesAction(Request $request)
     {
     	// 获取上课日期 上课时间时间戳数组的索引
@@ -173,6 +182,11 @@ class MyTeachingController extends BaseController
     {
     	return $this->getServiceKernel()->createService('Course.TeacherAvailableTimesService');
     }
+
+    protected function getStudentBookLessonsService()
+    {
+        return $this->getServiceKernel()->createService('Course.StudentBookLessonsService');
+    }
     
     // 获取课程日期和课程时间 时间戳数组的索引
     protected  function getIndexesofTS()
@@ -192,7 +206,7 @@ class MyTeachingController extends BaseController
     {
     	// the timestamp of nth day
     	$nthDay = 	$this->getIndexesofTS();
-    
+   
     	return $courseDate = array( 	$nthDay[1] => date("m-d D", $nthDay[1]),
     			$nthDay[2] => date("m-d D", $nthDay[2]),
     			$nthDay[3] => date("m-d D", $nthDay[3]),

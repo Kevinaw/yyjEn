@@ -18,12 +18,41 @@ class TeacherAvailableTimesServiceImpl extends BaseService implements TeacherAva
 	    return $this->getTeacherAvailableTimesDao()->searchTATCount(array(
 						"teacherId" => $userId,
 						"haveCourse" => 1));
+
 	}
 
     // 查找老师已排课的课程 同时返回课表和学生预约信息 JOIN
 	public function findArrangedTATs($userId, $start, $limit)
 	{
-	    return $this->getTeacherAvailableTimesDao()->searchJoinedTATs($userId, $start, $limit);
+	    $tats = $this->getTeacherAvailableTimesDao()->searchJoinedTATs($userId, $start, $limit);
+
+        // 查看课程时间, 根据课程时间决定按钮状态
+        if(!empty($tats))
+        {
+            foreach($tats as $key => $value)
+            {
+                $tnow = time();
+                // 距课程开始大于10分钟，教室状态为被占用
+                if($tnow < $value['timeTS'] - 600)
+                {
+                    $value['crStatus'] = 'occupied';
+                }
+                // 开课前10分钟和开课后30分钟，可进入教室
+                elseif($value['timeTS'] - 600 <= $tnow and $tnow < $value['timeTS'] + 1800)
+                {
+                    $value['crStatus'] = 'enabled';
+                }
+                // 开课30分钟后，不能进入教室
+                elseif($tnow >= $value['timeTS'] + 1800)
+                {
+                    $value['crStatus'] = 'disabled';
+                }
+                $tats[$key] = $value;
+            }
+        }
+
+        return $tats;
+
 	}
 
 	// return value array(array("timestamp", "tag"),...), tag("have course", "registered", "NA")

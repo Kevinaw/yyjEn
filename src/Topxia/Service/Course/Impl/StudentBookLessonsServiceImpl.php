@@ -156,7 +156,65 @@ class StudentBookLessonsServiceImpl extends BaseService implements StudentBookLe
 
 	public function searchArrangedSBLs($courseId, $studentId)
     {
-		return $this->getStudentBookLessonsDao()->searchArrangedSBLs($courseId, $studentId);
+		$sbls = $this->getStudentBookLessonsDao()->searchArrangedSBLs($courseId, $studentId);
+        // 查看课程时间, 根据课程时间决定按钮状态
+        if(null !== $sbls)
+        {
+            foreach($sbls as $key => $value)
+            {
+                $tnow = time();
+                // 距课程开始大于10分钟，教室状态为被占用
+                if($tnow < $value['timeTS'] - 600)
+                {
+                    $value['crStatus'] = 'occupied';
+                }
+                // 开课前10分钟和开课后30分钟，可进入教室
+                elseif($value['timeTS'] - 600 <= $tnow and $tnow < $value['timeTS'] + 1800)
+                {
+                    $value['crStatus'] = 'enabled';
+                }
+                // 开课30分钟后，不能进入教室
+                elseif($tnow >= $value['timeTS'] + 1800)
+                {
+                    $value['crStatus'] = 'disabled';
+                }
+                $sbls[$key] = $value;
+            }
+        }
+
+        return $sbls;
+    }
+
+    public function formClassroomUrl($bookingId, $classroomId, $courseTS)
+    {
+		$booking = $this->getStudentBookLessonsDao()->getBooking($bookingId);
+		if (empty($booking)) {
+			throw $this->createNotFoundException();
+		}
+
+		$classroom = $this->getClassroomDao()->getClassroom($classroomId);
+		if (empty($classroom)) {
+			throw $this->createNotFoundException();
+		}
+
+		$user = $this->getCurrentUser();
+		if (empty($user->id)) {
+			throw $this->createAccessDeniedException('未登录用户，无权操作！');
+		}
+
+        if( $courseTS - 600 > time() or $courseTS + 1800 < time()){
+			throw $this->createAccessDeniedException('不是上课时间，无权操作！');
+        }
+
+        if( $booking['timeTS'] !== $courseTS ){
+			throw $this->createAccessDeniedException('不是预约时间，无权操作！');
+        }
+
+        return $classroom['serverAddress'] . "/as/wapi/goto_downloader?role=attendee" . 
+                "&name=" .  $user['nickname'] .
+                "&meeting_id=" . $classroom['meetingId'] . 
+                "&password=" . $classroom['password'] .
+                "&sumbit=submit";
     }
 
 	private function getStudentBookLessonsDao ()
@@ -177,6 +235,11 @@ class StudentBookLessonsServiceImpl extends BaseService implements StudentBookLe
 	private function getCourseScheduleDao ()
 	{
 		return $this->createDao('Course.CourseScheduleDao');
+	}
+
+	private function getClassroomDao ()
+	{
+		return $this->createDao('Taxonomy.ClassroomDao');
 	}
 
 	//获取上课时间的时间戳,根据上课日期的时间戳

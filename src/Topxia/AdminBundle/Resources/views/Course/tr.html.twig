@@ -3,6 +3,8 @@
   <td>{{ course.id }}</td>
   <td>
     <a href="{{ path('course_show', {id:course.id}) }}" target="_blank"><strong>{{ course.title }}</strong></a>
+
+{#
     <br>
     <span class="text-muted text-sm">分类：{{ category.name|default('--') }}</span>
     <br>
@@ -10,14 +12,17 @@
     {% if course.recommended %}
       <span class="label label-default">荐:{{ course.recommendedTime|date('Y-m-d') }}</span>
     {% endif %}
+#}
   </td>
   <td>{{ course.studentNum }}</td>
+{#
   <td>{{ course.listenerNum }}</td>
   <td><span class="money-text">{{ course.income }}</span></td>
   <td><span class="money-text">{{ course.teacherFee }}</span>
 		<br>
     	<span class="text-muted text-sm">{% if course.paid %}已付{% else %}未付{% endif %}</span>
   </td>
+#}
   <td>{{ dict_text('courseStatus:html', course.status) }}</td>
   <td>
     {{ admin_macro.user_link(user) }}

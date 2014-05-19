@@ -52,7 +52,7 @@ class CourseServiceImpl extends BaseService implements CourseService
 		} else if ($sort == 'studentNum') {
 			$orderBy = array('studentNum' , 'DESC');
 		} else {
-			$orderBy = array('createdTime', 'DESC');
+			$orderBy = array('createdTime', 'ASC');
 		}
 		
 		return CourseSerialize::unserializes($this->getCourseDao()->searchCourses($conditions, $orderBy, $start, $limit));
@@ -1255,6 +1255,19 @@ class CourseServiceImpl extends BaseService implements CourseService
 			throw $this->createServiceException('课程会员不存在，备注失败!');
 		}
 		$fields = array('remark' => empty($remark) ? '' : (string) $remark);
+		return $this->getMemberDao()->updateMember($member['id'], $fields);
+	}
+
+	public function remainNumStudent($courseId, $userId, $remainingNum)
+	{
+		$member = $this->getCourseMember($courseId, $userId);
+		if (empty($member)) {
+			throw $this->createServiceException('课程会员不存在，调整课时数失败!');
+		}
+		if (empty($remainingNum)) {
+			throw $this->createServiceException('课时数为空，调整失败!');
+		}
+		$fields = array('remainingNum' => (int) $remainingNum);
 		return $this->getMemberDao()->updateMember($member['id'], $fields);
 	}
 

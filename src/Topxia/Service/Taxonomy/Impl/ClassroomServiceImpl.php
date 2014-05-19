@@ -28,9 +28,9 @@ class ClassroomServiceImpl extends BaseService implements ClassroomService
 
     public function createClassroom(array $classroom)
     {
-        $classroom = ArrayToolkit::parts($classroom, array('name', 'serverAddress', 'username', 'password'));
+        $classroom = ArrayToolkit::parts($classroom, array('name', 'serverAddress', 'meetingId', 'password'));
 
-        if (!ArrayToolkit::requireds($classroom, array('name', 'serverAddress', 'username', 'password'))) {
+        if (!ArrayToolkit::requireds($classroom, array('name', 'serverAddress', 'meetingId', 'password'))) {
             throw $this->createServiceException("缺少必要参数，，添加分类失败");
         }
 
@@ -51,7 +51,7 @@ class ClassroomServiceImpl extends BaseService implements ClassroomService
             throw $this->createNoteFoundException("教室(#{$id})不存在，更新教室失败！");
         }
 
-        $fields = ArrayToolkit::parts($fields, array('name', 'serverAddress', 'username', 'password'));
+        $fields = ArrayToolkit::parts($fields, array('name', 'serverAddress', 'meetingId', 'password'));
         if (empty($fields)) {
             throw $this->createServiceException('参数不正确，更新教室失败！');
         }
@@ -94,10 +94,10 @@ class ClassroomServiceImpl extends BaseService implements ClassroomService
                         }
                     }
                     break;
-                case 'username':
-                    $classroom['username'] = (string) $classroom['username'];
-                    if (empty($classroom['username'])) {
-                        throw $this->createServiceException("用户名不能为空，保存教室失败");
+                case 'meetingId':
+                    $classroom['meetingId'] = (int) $classroom['meetingId'];
+                    if (empty($classroom['meetingId'])) {
+                        throw $this->createServiceException("会议ID不能为空，保存教室失败");
                     }
                     break;
                 case 'password':

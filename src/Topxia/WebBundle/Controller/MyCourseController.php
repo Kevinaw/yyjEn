@@ -53,6 +53,15 @@ class MyCourseController extends BaseController
         ));
     }
 
+    public function enterClassroomAction(Request $request, $bid, $cid, $cts)
+    {
+        $url = $this->getStudentBookLessonsService()->formClassroomUrl($bid, $cid, $cts);
+
+        return $this->render('TopxiaWebBundle:MyCourse:classroom.html.twig', array(
+            'url'=>$url
+        ));
+    }
+
     public function bookLessonsAction(Request $request)
     {
     	// 获取上课日期 上课时间时间戳数组的索引
