@@ -99,6 +99,7 @@ class StudentBookLessonsDaoImpl extends BaseDao implements StudentBookLessonsDao
 		->andWhere('timeTS = :timeTS')
 		->andWhere('courseId = :courseId')
 		->andWhere('studentId = :studentId')
+		->andWhere('id = :id')
 		->andWhere('isArranged = :isArranged');
 	
 		return $builder;

@@ -201,7 +201,7 @@ class StudentBookLessonsServiceImpl extends BaseService implements StudentBookLe
 		if (empty($user->id)) {
 			throw $this->createAccessDeniedException('未登录用户，无权操作！');
 		}
-
+/*
         if( $courseTS - 600 > time() or $courseTS + 1800 < time()){
 			throw $this->createAccessDeniedException('不是上课时间，无权操作！');
         }
@@ -209,7 +209,7 @@ class StudentBookLessonsServiceImpl extends BaseService implements StudentBookLe
         if( $booking['timeTS'] !== $courseTS ){
 			throw $this->createAccessDeniedException('不是预约时间，无权操作！');
         }
-
+*/
         return $classroom['serverAddress'] . "/as/wapi/goto_downloader?role=attendee" . 
                 "&name=" .  $user['nickname'] .
                 "&meeting_id=" . $classroom['meetingId'] . 

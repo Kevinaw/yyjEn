@@ -1,0 +1,12 @@
+        <tr id="schedule-{{ schedule.id }}-tr">
+          <td>{{ schedule.id }}</td>
+          <td>{{ schedule.dateTS | date("m-d") }}</td>
+          <td>{{ schedule.lessonTS | time }}</td>
+          <td>{{ teacher.nickname }}</td>
+          <td>{{ student.nickname }}</td>
+          <td>{{ course.title }}</td>
+          <td class="text-danger">{{ schedule.remark }}</td>
+          <td>
+            <a class="btn btn-default btn-sm" href="" data-toggle="modal" data-target="#modal" data-url="{{ path('admin_course_schedule_remark', {id:schedule.id}) }}">备注</a>
+          </td>
+        </tr>

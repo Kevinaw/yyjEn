@@ -30,6 +30,18 @@ class CourseScheduleDaoImpl extends BaseDao implements CourseScheduleDao
         return $this->getConnection()->fetchAll($sql, $ids);
     }
 
+    public function searchAllJoinedSchedules($start, $limit)
+    {
+        $this->filterStartLimit($start, $limit);
+		$sql = "SELECT course_schedule.*, teacher_available_times.teacherId, " .
+                "student_booked_lessons.studentId, student_booked_lessons.dateTS, student_booked_lessons.courseId " .
+                "FROM course_schedule " . 
+                "LEFT JOIN teacher_available_times ON teacher_available_times.id = course_schedule.teacheravaliableId " .
+                "LEFT JOIN student_booked_lessons ON student_booked_lessons.id = course_schedule.studentbookId " . 
+                "ORDER BY course_schedule.lessonTS DESC LIMIT $limit OFFSET $start";
+		return $this->getConnection()->fetchAll($sql) ? : null;
+    }
+
     public function searchCourseSchedules($conditions, $orderBy, $start, $limit)
     {
         $this->filterStartLimit($start, $limit);

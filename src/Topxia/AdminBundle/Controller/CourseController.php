@@ -13,14 +13,14 @@ class CourseController extends BaseController
     	// loop every course to update the published and completed course to status 'completed'
     	$courses = $this->getCourseService()->searchCourses(array(
     			'status'=>'published',), null, 0, 10000);
-    	foreach ($courses as $course)
-    	{
-    		if (strtotime($course['startingTime']) + $course['length'] * 60 < time()){
-    			$this->getCourseService()->updateCourse($course['id'], array(
-	    			'status'=>'completed',
-	    		));
-    		}    		
-    	}
+    	//foreach ($courses as $course)
+    	//{
+    	//	if (strtotime($course['startingTime']) + $course['length'] * 60 < time()){
+    	//		$this->getCourseService()->updateCourse($course['id'], array(
+	    //			'status'=>'completed',
+	    //		));
+    	//	}    		
+    	//}
 
     	
         $conditions = $request->query->all();
@@ -40,6 +40,66 @@ class CourseController extends BaseController
             'users' => $users,
             'categories' => $categories,
             'paginator' => $paginator
+        ));
+    }
+
+    public function scheduleHistoryAction (Request $request)
+    {
+        // get all the schedules and also teacher info , student info
+        $conditions = array();
+        $count = $this->getTeacherAvailableTimesService()->searchScheduleCount($conditions);
+
+        $paginator = new Paginator($this->get('request'), $count, 20);
+
+        $schedules = $this->getTeacherAvailableTimesService()->searchJoinedSchedules(
+                        $paginator->getOffsetCount(),  
+                        $paginator->getPerPageCount()
+                    );
+
+        $students = $this->getUserService()->findUsersByIds(ArrayToolkit::column($schedules, 'studentId'));
+        $teachers = $this->getUserService()->findUsersByIds(ArrayToolkit::column($schedules, 'teacherId'));
+        $courses = $this->getCourseService()->findCoursesByIds(ArrayToolkit::column($schedules, 'courseId'));
+
+        return $this->render('TopxiaAdminBundle:Course:schedules.html.twig', array(
+            'schedules' => $schedules,
+            'courses' => $courses ,
+            'teachers' => $teachers,
+            'students' => $students,
+            'paginator' => $paginator
+        ));
+    }
+
+    public function remarkAction(Request $request, $id)
+    {
+        $schedule = $this->getTeacherAvailableTimesService()->getSchedule($id);
+
+        if ('POST' == $request->getMethod()) {
+            $data = $request->request->all();
+            $schedule = $this->getTeacherAvailableTimesService()->remarkSchedule($id, $data['remark']);
+            $tats = $this->getTeacherAvailableTimesService()->searchTATs(array(
+                            "id"=>$schedule['teacheravaliableId']), null, 0, 10000);
+            $teachers = $this->getUserService()->findUsersByIds(ArrayToolkit::column($tats, 'teacherId'));
+            $teacher = $teachers[$tats[0]['teacherId']];
+            
+            // students
+            $sbls = $this->getStudentBookLessonsService()->searchSBLs(array(
+                            "id"=>$schedule['studentbookId']), null, 0, 10000);
+            $students = $this->getUserService()->findUsersByIds(ArrayToolkit::column($sbls, 'studentId'));
+            $student = $students[$sbls[0]['studentId']];
+            $courses = $this->getCourseService()->findCoursesByIds(ArrayToolkit::column($sbls, 'courseId'));
+            $course = $courses[$sbls[0]['courseId']];
+
+            $schedule['dateTS'] = $sbls[0]['dateTS'];
+            return $this->render('TopxiaAdminBundle:Course:schedules-table-tr.html.twig', array(
+                'schedule' => $schedule,
+                'course' => $course ,
+                'teacher' => $teacher,
+                'student' => $student
+            ));
+        }
+
+        return $this->render('TopxiaAdminBundle:Course:remark-modal.html.twig',array(
+            'schedule'=>$schedule
         ));
     }
     

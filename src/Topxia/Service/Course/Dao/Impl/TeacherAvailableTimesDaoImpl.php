@@ -99,6 +99,7 @@ class TeacherAvailableTimesDaoImpl extends BaseDao implements TeacherAvailableTi
 		->andWhere('availableDateTS = :availableDateTS')
 		->andWhere('availableTimeTS = :availableTimeTS')
 		->andWhere('teacherId = :teacherId')
+		->andWhere('id = :id')
 		->andWhere('haveCourse = :haveCourse');
 	
 		return $builder;

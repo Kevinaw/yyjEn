@@ -282,6 +282,14 @@ admin_course_arrange:
     pattern:  /course/arrange
     defaults: { _controller: TopxiaAdminBundle:Course:arrange }
 
+admin_course_schedule_history:
+    pattern:  /course/schedule/history
+    defaults: { _controller: TopxiaAdminBundle:Course:scheduleHistory}
+
+admin_course_schedule_remark:
+    pattern:  /course/schedule/remark/{id}
+    defaults: { _controller: TopxiaAdminBundle:Course:remark }
+
 admin_course_getTimes:
     pattern:  /course/getTimes
     defaults: { _controller: TopxiaAdminBundle:Course:getTimes }

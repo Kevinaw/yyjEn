@@ -125,6 +125,11 @@ class TeacherAvailableTimesServiceImpl extends BaseService implements TeacherAva
 		return $this->getTeacherAvailableTimesDao()->searchTAT($conditions, $orderBy, $start, $limit);
 	}
 
+	public function searchScheduleCount($conditions)
+	{
+		return $this->getCourseScheduleDao()->searchCourseScheduleCount($conditions);
+	}
+
 	public function searchSchedules($conditions, $sort = '', $start, $limit)
 	{
 		$orderBy = array('id', 'ASC');
@@ -135,6 +140,11 @@ class TeacherAvailableTimesServiceImpl extends BaseService implements TeacherAva
 		return $this->getCourseScheduleDao()->searchCourseSchedules($conditions, $orderBy, $start, $limit);
 	}
     
+	public function searchJoinedSchedules($start, $limit)
+	{
+		return $this->getCourseScheduleDao()->searchAllJoinedSchedules($start, $limit);
+	}
+
     public function addSchedule($data)
     {
         $retRes = array("status"=>"fail", "errorMsg"=>"");
@@ -165,6 +175,21 @@ class TeacherAvailableTimesServiceImpl extends BaseService implements TeacherAva
         $this->getStudentBookLessonsDao()->updateSBL($schedule['studentbookId'], array('isArranged'=>0));
 
         return true;
+    }
+
+    public function getSchedule($id)
+    {
+        return $this->getCourseScheduleDao()->getCourseSchedule($id);
+    }
+
+    public function remarkSchedule($id, $remark)
+    {
+		$schedule = $this->getCourseScheduleDao()->getCourseSchedule($id);
+		if (empty($schedule)) {
+			throw $this->createServiceException('课表信息不存在，备注失败!');
+		}
+		$fields = array('remark' => empty($remark) ? '' : (string) $remark);
+        return $this->getCourseScheduleDao()->updateCourseSchedule($id, $fields);
     }
 
 	private function getTeacherAvailableTimesDao ()
