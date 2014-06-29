@@ -40,6 +40,7 @@
           <span class="money-text">{{ order.price }}</span>元
         </td>
       </tr>
+      {#
       <tr> <th width="25%">是否为赠品</th> 
            <td width="75%">
             {% if order.isGift == 0 %} 非赠品
@@ -47,6 +48,7 @@
             {% endif %}
            </td> 
       </tr>
+      #}
     <tr> <th width="25%">支付方式</th> 
            <td width="75%">
             {% if order.payment == 'none' %} 暂无

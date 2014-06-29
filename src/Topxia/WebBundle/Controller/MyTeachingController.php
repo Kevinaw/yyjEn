@@ -47,11 +47,16 @@ class MyTeachingController extends BaseController
             $courses = ArrayToolkit::index($courses, 'id');
         }
 
+		$classrooms = $this->getClassroomService()->findAllClassrooms();
+        $classrooms = ArrayToolkit::index($classrooms, 'id');
+        
         return $this->render('TopxiaWebBundle:MyTeaching:teaching.html.twig', array(
             'TATs'=>$TATs,
             'paginator' => $paginator,
             'students' => $students,
-            'courses' => $courses
+            'courses' => $courses,
+            'classrooms' => $classrooms,
+            'currentUser' => $user
         ));
     }
 
@@ -187,6 +192,11 @@ class MyTeachingController extends BaseController
     {
         return $this->getServiceKernel()->createService('Course.StudentBookLessonsService');
     }
+
+	private function getClassroomService()
+	{
+        return $this->getServiceKernel()->createService('Taxonomy.ClassroomService');
+	}
     
     // 获取课程日期和课程时间 时间戳数组的索引
     protected  function getIndexesofTS()

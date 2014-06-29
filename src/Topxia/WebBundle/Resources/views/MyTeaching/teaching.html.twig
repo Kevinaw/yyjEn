@@ -29,8 +29,9 @@
           <td> {{ students[TAT.studentId]['nickname']}}-{{ courses[TAT.courseId]['title'] }}</td>
     {# 进入教室的逻辑，上课前10分钟有效，不到上课时间显示其他同学正在使用教室，到达上课时间就能进入教室了，可以重复进入；课程结束后，关闭按钮；
           <td><a href="{% if TAT.crStatus == 'enabled' %} {{ path('my_teaching_enter_classroom', {bid: TAT.studentbookId, cid: TAT.classroomId, cts: TAT.timeTS}) }} {%endif%}" class="btn btn-primary btn-lg {% if TAT.crStatus =='occupied' %} classroom-occupied {% endif %}" role="button" {% if TAT.crStatus == 'disabled' %} disabled {% endif %} {% if TAT.crStatus == 'enabled' %} target = "_blank"{% endif %}>Enter Classroom</a></td> #}
+          {#<td><a href="{% if TAT.crStatus == 'enabled' %} Webshell:Join server.gomeetnow.com 80 {{ classrooms[TAT.classroomId].password }} {{ classrooms[TAT.classroomId].meetingId }}  {{ currentUser.nickname }} {%endif%}" class="btn btn-primary btn-lg {% if TAT.crStatus =='occupied' %} classroom-occupied {% endif %}" role="button" {% if TAT.crStatus == 'disabled' %} disabled {% endif %} {% if TAT.crStatus == 'enabled' %} target = "_blank"{% endif %}>Enter Classroom</a></td>#}
     {# 以下为提供测试用 #}
-          <td><a href="{% if TAT.crStatus == 'enabled' or TAT.crStatus == 'occupied' %} {{ path('my_teaching_enter_classroom', {bid: TAT.studentbookId, cid: TAT.classroomId, cts: TAT.timeTS}) }} {%endif%}" class="btn btn-primary btn-lg" role="button" {% if TAT.crStatus == 'disabled' %} disabled {% endif %} {% if TAT.crStatus == 'enabled' or TAT.crStatus == 'occupied' %} target = "_blank"{% endif %}>Enter Classroom</a></td>
+          <td><a href="{% if TAT.crStatus == 'enabled' or TAT.crStatus == 'occupied' %} Webshell:Join server.gomeetnow.com 80 {{ classrooms[TAT.classroomId].password }}  {{ classrooms[TAT.classroomId].meetingId }} {{ currentUser.nickname }} {%endif%}" class="btn btn-primary btn-lg" role="button" {% if TAT.crStatus == 'disabled' %} disabled {% endif %} {% if TAT.crStatus == 'enabled' or TAT.crStatus == 'occupied' %} target = "_blank"{% endif %}>Enter Classroom</a></td>
         </tr>
       {% else %}
         <tr><td colspan="20">No Teaching Courses</td></tr>
