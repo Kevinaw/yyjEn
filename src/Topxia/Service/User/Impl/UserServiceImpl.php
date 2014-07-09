@@ -330,7 +330,7 @@ class UserServiceImpl extends BaseService implements UserService
             throw $this->createServiceException('nickname error!');
         }
 
-        if (!SimpleValidator::mobile($registration['mobile'])) {
+        if (isset($registration['mobile']) && !SimpleValidator::mobile($registration['mobile'])) {
         	throw $this->createServiceException('mobile error!');
         }
         
@@ -342,14 +342,14 @@ class UserServiceImpl extends BaseService implements UserService
             throw $this->createServiceException('昵称已存在');
         }
 
-        if (!$this->isMobileAvaliable($registration['mobile'])) {
+        if (isset($registration['mobile']) && !$this->isMobileAvaliable($registration['mobile'])) {
         	throw $this->createServiceException('手机号已存在');
         }
         
         $user = array();
         $user['email'] = $registration['email'];
         $user['nickname'] = $registration['nickname'];
-        $user['mobile'] = $registration['mobile'];
+        $user['mobile'] = isset($registration['mobile']) ? $registration['mobile'] : '';
         $user['roles'] =  array('ROLE_USER');
         $user['type'] = $type;
         $user['createdIp'] = empty($registration['createdIp']) ? '' : $registration['createdIp'];
